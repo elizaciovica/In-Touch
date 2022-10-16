@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:orientation="vertical"
+    tools:context=".ui.StartActivity">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="In Touch"
+        android:textStyle="bold|italic"
+        android:textColor="#570924"
+        android:textSize="40dp"
+        android:layout_marginTop="310dp"/>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="The place to keep your\n connection safe"
+        android:textStyle="italic"
+        android:textColor="#BA7A76"
+        android:textSize="20dp"
+        android:layout_marginTop="5dp"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_marginHorizontal="120dp"
+        android:paddingTop="10dp"
+        android:text="LOGIN"
+        android:textSize="25dp"
+        android:textStyle="bold|italic"
+        android:backgroundTint="#BA7A76"
+        android:layout_marginTop="60dp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <com.google.android.material.textview.MaterialTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:gravity="center_horizontal"
+            android:text="You don't have an account?"
+            android:textColor="#BA7A76"
+            android:textSize="15dp"
+            android:textStyle="italic"
+        android:layout_marginLeft="60dp"
+        />
+
+        <Button
+            android:id="@+id/signButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sign up"
+            android:textColor="#570924"
+            android:textStyle="bold|italic"
+            android:textSize="15dp"
+            android:textAlignment="gravity"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            />
+   </LinearLayout>
+</LinearLayout>
