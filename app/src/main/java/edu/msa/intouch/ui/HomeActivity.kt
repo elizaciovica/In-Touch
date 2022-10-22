@@ -12,12 +12,11 @@ class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
 
-        val button : Button = binding.homeIcon
+        val button: Button = binding.homeIcon
 
         val showPopUp = PopupMenu(
             this,
@@ -29,7 +28,7 @@ class HomeActivity : AppCompatActivity() {
 
         showPopUp.setOnMenuItemClickListener { menuItem ->
             val id = menuItem.itemId
-            if (id ==1 ){
+            if (id == 1) {
                 startActivity(Intent(this, RegisterActivity::class.java))
             }
             false
