@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "952340242998",
+    "project_id": "intouch-c623b",
+    "storage_bucket": "intouch-c623b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952340242998:android:3b81ff17486319b1766e97",
+        "android_client_info": {
+          "package_name": "edu.msa.intouch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "952340242998-omcne9af1po99ke5c6m4ofopqgpkbdge.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "edu.msa.intouch",
+            "certificate_hash": "b301ba900de1d2334c40b798d68c731d52aaf0ec"
+          }
+        },
+        {
+          "client_id": "952340242998-huh1pu37rf0nfsgfi2nl9lp9ute53p1a.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAb3YbzAvTB75xnDZYVX1ZCeqdTgt8qUVE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "952340242998-huh1pu37rf0nfsgfi2nl9lp9ute53p1a.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
