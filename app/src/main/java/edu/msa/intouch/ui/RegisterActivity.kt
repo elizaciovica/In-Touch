@@ -85,16 +85,14 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun loginAction() {
-        //to be implemented after login page is done
-//        val intent = Intent(this, LoginActivity::class.java)
-//        startActivity(intent)
-//        finish()
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun setBiding() {
         binding = ActivityRegisterBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
-
 
 }
