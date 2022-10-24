@@ -59,7 +59,7 @@ class RegisterActivity : AppCompatActivity() {
 
                             Toast.makeText(
                                 this,
-                                "Account succesfully created",
+                                "Account successfully created",
                                 Toast.LENGTH_SHORT
                             ).show()
                             startApplication(firebaseUser, email)

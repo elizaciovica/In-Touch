@@ -14,7 +14,7 @@
         android:layout_marginTop="310dp"
         android:layout_marginBottom="25dp"
         android:gravity="center_horizontal"
-        android:text="Sign Up"
+        android:text="Login"
         android:textColor="#570924"
         android:textSize="40dp"
         android:textStyle="bold|italic" />
@@ -72,7 +72,7 @@
         android:backgroundTint="#BA7A76"
         android:gravity="center_horizontal"
         android:paddingTop="10dp"
-        android:text="SIGN UP"
+        android:text="LOGIN"
         android:textColor="#FFFFFF"
         android:textSize="25dp"
         android:textStyle="bold|italic" />
@@ -89,7 +89,7 @@
             android:layout_marginLeft="60dp"
             android:layout_marginTop="5dp"
             android:gravity="center_horizontal"
-            android:text="You already have an account?"
+            android:text="You don't have an account?"
             android:textColor="#BA7A76"
             android:textSize="15dp"
             android:textStyle="italic" />
@@ -99,7 +99,7 @@
             style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign in"
+            android:text="Sign up"
             android:textAlignment="gravity"
             android:textColor="#570924"
             android:textSize="15dp"
