@@ -30,6 +30,7 @@ class HomeActivity : AppCompatActivity() {
             val id = menuItem.itemId
             if (id == 1) {
                 startActivity(Intent(this, RegisterActivity::class.java))
+                finish()
             }
             false
         }
