@@ -1,41 +1,59 @@
 package edu.msa.intouch.ui
 
 import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import edu.msa.intouch.databinding.ActivityRegisterBinding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import edu.msa.intouch.databinding.ActivityLoginBinding
 
-class RegisterActivity : AppCompatActivity() {
-
-    private lateinit var binding: ActivityRegisterBinding
+class LoginActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setBiding()
+        setBinding()
+        //verifyLoggedInUser()
         initializeButtons()
+    }
 
+    private fun setBinding() {
+        binding = ActivityLoginBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
+    }
+
+    private fun verifyLoggedInUser() {
+        val user = Firebase.auth.currentUser
+
+        if (user !== null) {
+            user.email?.let { startApplication(user, it) }
+        }
     }
 
     private fun initializeButtons() {
-        binding.signInButton.setOnClickListener {
-            loginAction()
+        binding.signUpButton.setOnClickListener {
+            createAccountAction()
         }
 
-        binding.signUpButton.setOnClickListener {
-            registerAction()
+        binding.loginButton.setOnClickListener {
+            loginAction()
         }
     }
 
-    private fun registerAction() {
-        val password = binding.password.text.toString().trim { it <= ' ' }
-        val email = binding.email.text.toString().trim { it <= ' ' }
+    private fun createAccountAction() {
+        val intent = Intent(this, RegisterActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
 
+    private fun loginAction() {
         when {
-            TextUtils.isEmpty(email) -> {
+            TextUtils.isEmpty(binding.email.text.toString().trim { it <= ' ' }) -> {
                 Toast.makeText(
                     this,
                     "Please enter email.",
@@ -43,7 +61,7 @@ class RegisterActivity : AppCompatActivity() {
                 ).show()
             }
 
-            TextUtils.isEmpty(password) -> {
+            TextUtils.isEmpty(binding.password.text.toString().trim { it <= ' ' }) -> {
                 Toast.makeText(
                     this,
                     "Please enter password.",
@@ -52,16 +70,21 @@ class RegisterActivity : AppCompatActivity() {
             }
 
             else -> {
-                FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
+                val email: String = binding.email.text.toString().trim { it <= ' ' }
+                val password: String = binding.password.text.toString().trim { it <= ' ' }
+
+                FirebaseAuth.getInstance()
+                    .signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             val firebaseUser: FirebaseUser = task.result!!.user!!
 
                             Toast.makeText(
                                 this,
-                                "Account successfully created",
+                                "Login successful",
                                 Toast.LENGTH_SHORT
                             ).show()
+
                             startApplication(firebaseUser, email)
                         } else {
                             Toast.makeText(
@@ -75,7 +98,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun startApplication(firebaseUser: FirebaseUser, email: String) {
+    private fun startApplication(
+        firebaseUser: FirebaseUser,
+        email: String
+    ) {
         val intent = Intent(this, HomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra("userId", firebaseUser.uid)
@@ -83,16 +109,4 @@ class RegisterActivity : AppCompatActivity() {
         startActivity(intent)
         finish()
     }
-
-    private fun loginAction() {
-        val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
-        finish()
-    }
-
-    private fun setBiding() {
-        binding = ActivityRegisterBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
-
 }

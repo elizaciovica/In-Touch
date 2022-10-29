@@ -29,6 +29,7 @@
         android:layout_marginTop="5dp"/>
 
     <com.google.android.material.button.MaterialButton
+        android:id="@+id/loginButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
@@ -39,6 +40,7 @@
         android:textStyle="bold|italic"
         android:backgroundTint="#BA7A76"
         android:layout_marginTop="60dp"
+        android:textColor="#FFFFFF"
         />
 
     <LinearLayout
