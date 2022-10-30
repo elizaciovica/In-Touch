@@ -7,10 +7,13 @@ import android.widget.Button
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import edu.msa.intouch.databinding.ActivityHomeBinding
+import okhttp3.*
+import java.io.IOException
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
+    private var payload = "Text"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +42,31 @@ class HomeActivity : AppCompatActivity() {
             showPopUp.show()
         }
 
+        binding.buttonExample.setOnClickListener {
+            binding.payload.text = payload
+            getData()
+        }
+
+    }
+
+    private fun getData() {
+        val client = OkHttpClient()
+        val url = "https://j1qiwuks7y.loclx.io/users"
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        client.newCall(request).enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {}
+            override fun onResponse(call: Call, response: Response) {
+                response.use {
+                    if (response.isSuccessful) {
+                        payload = response.body()?.string().toString()
+                    }
+                }
+            }
+        })
     }
 
     private fun setBinding() {
