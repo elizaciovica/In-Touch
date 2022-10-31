@@ -12,12 +12,29 @@
         android:id="@+id/homeIcon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
-        android:layout_marginRight="285dp"
         android:layout_marginLeft="25dp"
-        android:paddingTop="10dp"
         android:layout_marginTop="15dp"
-        app:cornerRadius="200dp"
-        android:height="100dp" />
+        android:layout_marginRight="285dp"
+        android:height="100dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
+        app:cornerRadius="200dp" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/buttonExample"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:layout_marginTop="50dp"
+        android:gravity="center_horizontal"
+        android:text="Button frumos cu fainosag" />
+
+    <TextView
+        android:id="@+id/payload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="50dp"
+        android:gravity="center_horizontal"
+        android:text="Text initial" />
 
 </LinearLayout>
