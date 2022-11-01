@@ -42,16 +42,16 @@ class HomeActivity : AppCompatActivity() {
             showPopUp.show()
         }
 
-        binding.buttonExample.setOnClickListener {
-            binding.payload.text = payload
-            getData()
-        }
+//        binding.buttonExample.setOnClickListener {
+//            binding.payload.text = payload
+//            getData()
+//        }
 
     }
 
     private fun getData() {
         val client = OkHttpClient()
-        val url = "https://j1qiwuks7y.loclx.io/users"
+        val url = "https://saqrb3ukrq.loclx.io/users"
 
         val request = Request.Builder()
             .url(url)
