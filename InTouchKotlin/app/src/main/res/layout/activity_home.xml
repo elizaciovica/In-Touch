@@ -12,29 +12,98 @@
         android:id="@+id/homeIcon"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="25dp"
+        android:layout_marginStart="25dp"
         android:layout_marginTop="15dp"
-        android:layout_marginRight="285dp"
+        android:layout_marginEnd="285dp"
         android:height="100dp"
         android:gravity="center_horizontal"
         android:paddingTop="10dp"
         app:cornerRadius="200dp" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/buttonExample"
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
-        android:layout_marginTop="50dp"
-        android:gravity="center_horizontal"
-        android:text="Button frumos cu fainosag" />
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="#DDB0AD">
 
-    <TextView
-        android:id="@+id/payload"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_height="match_parent"
+                android:layout_width="match_parent">
+
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="194dp"
+                    android:scaleType="centerCrop"
+                    app:srcCompat="@drawable/noconnection"/>
+    
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="You currently don't have any connections"
+                    android:textAppearance="?attr/textAppearanceHeadline6"
+                    android:layout_centerInParent="true"
+                    android:textAlignment="center"
+                    android:fontFamily="@font/inter"
+                    android:textStyle="italic"
+                    android:textFontWeight="600"
+                    android:textSize="20sp"
+                    android:layout_margin="20dp"
+                    android:textColor="#570924"
+                    />
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="50dp"
-        android:gravity="center_horizontal"
-        android:text="Text initial" />
+        android:layout_margin="8dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingTop="20dp">
+
+        <com.google.android.material.button.MaterialButton
+            android:layout_width="210dp"
+            android:layout_height="60dp"
+            android:text="Create connection"
+            android:textColor="#570924"
+            android:backgroundTint="#D5D5CB"
+            android:textSize="18dp"
+            android:textFontWeight="300"
+            android:fontFamily="@font/inter"
+            android:textStyle="italic"
+            style="?attr/borderlessButtonStyle"
+            />
+
+    </LinearLayout>
+
+<!--    <com.google.android.material.button.MaterialButton-->
+<!--        android:id="@+id/buttonExample"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="50dp"-->
+<!--        android:layout_marginTop="50dp"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:text="Button frumos cu fainosag" />-->
+
+<!--    <TextView-->
+<!--        android:id="@+id/payload"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginHorizontal="50dp"-->
+<!--        android:gravity="center_horizontal"-->
+<!--        android:text="Text initial" />-->
 
 </LinearLayout>
