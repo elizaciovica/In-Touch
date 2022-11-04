@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class InTouchApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(InTouchApiApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(InTouchApiApplication.class, args);
+    }
 
 }
