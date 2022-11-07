@@ -46,6 +46,15 @@ class HomeActivity : AppCompatActivity() {
 //            binding.payload.text = payload
 //            getData()
 //        }
+        initializeButtons()
+
+    }
+
+    private fun initializeButtons() {
+        binding.connection.setOnClickListener {
+            startActivity(Intent(this, ConnectionActivity::class.java))
+            finish()
+        }
 
     }
 
