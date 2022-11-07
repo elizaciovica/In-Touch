@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/homebackground"
+    android:orientation="vertical"
+    tools:context=".ui.ConnectionActivity">
+
+    <Button
+        android:id="@+id/homeIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="285dp"
+        android:height="100dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
+        app:cornerRadius="200dp" />
+
+    <ImageButton
+        android:id="@+id/connectionIcon"
+        android:background="@drawable/dobby"
+        android:layout_width="match_parent"
+        android:layout_height="140dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginHorizontal="135dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
+        app:cornerRadius="200dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/inter"
+        android:text="FRIEND"
+        android:textColor="#FFFFFF"
+        android:textFontWeight="600"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:layout_marginHorizontal="160dp"/>
+
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="310dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="15dp"
+        android:hint="Friend Email"
+        android:textColorHint="#974763"
+        app:boxBackgroundColor="#EEBDBA"
+        app:hintTextColor="#974763"
+        app:startIconDrawable="@drawable/ic_baseline_person_24"
+        app:startIconTint="#570924">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:layout_marginTop="30dp"
+            android:id="@+id/connectionEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#974763" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/createConnectionId"
+        android:layout_width="210dp"
+        android:layout_height="60dp"
+        android:text="Create connection"
+        android:textColor="#570924"
+        android:backgroundTint="#D5D5CB"
+        android:textSize="18dp"
+        android:textFontWeight="300"
+        android:layout_marginHorizontal="100dp"
+        android:fontFamily="@font/inter"
+        android:textStyle="italic"
+        style="?attr/borderlessButtonStyle"
+        />
+
+</LinearLayout>

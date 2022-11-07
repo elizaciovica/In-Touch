@@ -75,6 +75,7 @@
         android:paddingTop="20dp">
 
         <com.google.android.material.button.MaterialButton
+            android:id="@+id/connection"
             android:layout_width="210dp"
             android:layout_height="60dp"
             android:text="Create connection"
