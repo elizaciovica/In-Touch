@@ -23,11 +23,11 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
         
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/mRec"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            tools:listitem="@layout/item_connection" />-->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/mRec"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_connection" />
         
     </LinearLayout>
 
