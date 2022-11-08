@@ -52,7 +52,8 @@ class HomeActivity : AppCompatActivity() {
 
     private fun initializeButtons() {
         binding.connection.setOnClickListener {
-            startActivity(Intent(this, ConnectionActivity::class.java))
+            //startActivity(Intent(this, ConnectionActivity::class.java))
+            startActivity(Intent(this@HomeActivity, ConnectionListActivity::class.java))
             finish()
         }
 
