@@ -43,11 +43,12 @@ class ConnectionActivity : AppCompatActivity() {
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             val token: String? = task.result.token
+                            println(token)
                             // Send token to your backend via HTTPS
                             // Initialize Network Interceptor
                             val networkInterceptor = Interceptor { chain ->
                                 val newRequest = chain.request().newBuilder()
-                                    .addHeader("Authorization", "$token")
+                                    .addHeader("Authorization", "Bearer $token")
                                     .build()
                                 val response = chain.proceed(newRequest)
 
@@ -59,7 +60,7 @@ class ConnectionActivity : AppCompatActivity() {
                                 .build()
 
                             val request = Request.Builder()
-                                .url("https://pay3v6lqkh.loclx.io/users/test")
+                                .url("https://yfv5brx1l4.loclx.io/users/test")
                                 .build()
 
                             client.newCall(request).enqueue(object : Callback {
