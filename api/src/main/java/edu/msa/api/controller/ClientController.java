@@ -57,30 +57,7 @@ public class ClientController {
     }
 
     @GetMapping("test")
-    public String test(Principal principal) throws FirebaseAuthException, IOException {
-        String finalToken = "Token not found";
-        if (RequestContextHolder.getRequestAttributes() != null) {
-            finalToken =
-                    ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest()
-                            .getHeader("Authorization");
-        }
-
-        //TODO: add the file in resources and copy the local path here
-        FileInputStream serviceAccount =
-                new FileInputStream("C:\\Users\\eliza\\StudioProjects\\In-Touch\\api\\src\\main\\resources\\intouch-c623b-firebase-adminsdk-1y17n-cbd7da8104.json");
-
-        FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
-
-        FirebaseApp.initializeApp(options);
-
-        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(finalToken);
-        String uid = decodedToken.getUid();
-
-
-        System.out.println(uid);
-        System.out.println(principal.getName());
-        return finalToken;
+    public String test() throws FirebaseAuthException {
+        return "Success!";
     }
 }
