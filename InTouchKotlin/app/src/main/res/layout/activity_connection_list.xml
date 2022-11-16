@@ -9,13 +9,25 @@
     android:background="@drawable/homebackground"
     tools:context=".ui.ConnectionListActivity">
 
+    <Button
+        android:id="@+id/homeIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="285dp"
+        android:height="100dp"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp"
+        app:cornerRadius="200dp" />
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Your connections"
         android:textSize="30sp"
         android:textColor="#570924"
-        android:layout_marginTop="175dp"
+        android:layout_marginTop="40dp"
         android:textAlignment="center"/>
 
     <LinearLayout
