@@ -19,17 +19,17 @@ public class ClientService {
         clientRepository.save(client);
     }
 
-    public Client get(final Integer id) {
-        return clientRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Not found"));
+    public Client get(final String firebaseId) {
+        return clientRepository.findByFirebaseId(firebaseId)
+                               .orElseThrow(() -> new IllegalArgumentException("Not found"));
     }
 
     public Iterable<Client> getAll() {
         return clientRepository.findAll();
     }
 
-    public void update(final Integer id, final Client client) {
-        final Client updatedClient = get(id);
+    public void update(final String firebaseId, final Client client) {
+        final Client updatedClient = get(firebaseId);
 
         updatedClient.setUsername(client.getUsername());
         updatedClient.setFirstName(client.getFirstName());

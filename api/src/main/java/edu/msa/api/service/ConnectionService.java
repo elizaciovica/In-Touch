@@ -25,9 +25,9 @@ public class ConnectionService {
 
     public void create(final Integer senderId, final Integer receiverId) {
         Client sender = clientRepository.findById(senderId)
-                .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
+                                        .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
         Client receiver = clientRepository.findById(receiverId)
-                .orElseThrow(() -> new IllegalArgumentException("Receiver not found."));
+                                          .orElseThrow(() -> new IllegalArgumentException("Receiver not found."));
 
         Optional<Connection> connection = connectionRepository.findBySenderIdAndReceiverId(sender, receiver);
         if (connection.isPresent()) {
@@ -49,7 +49,7 @@ public class ConnectionService {
 
     public Connection get(final Integer id) {
         return connectionRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Not found"));
+                                   .orElseThrow(() -> new IllegalArgumentException("Not found"));
     }
 
     public Iterable<Connection> getAll() {

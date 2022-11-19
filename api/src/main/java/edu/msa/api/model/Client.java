@@ -1,6 +1,9 @@
 package edu.msa.api.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PostPersist;
 import java.util.Objects;
 
 @Entity(name = "Client")
@@ -22,11 +25,6 @@ public class Client extends AbstractEntity {
     @Column(nullable = false, length = 50)
     private String email;
 
-    @PostPersist
-    public void afterSave() {
-        System.out.println("Saved the Client " + getFirebaseId());
-    }
-
     public Client() {
 
     }
@@ -37,6 +35,11 @@ public class Client extends AbstractEntity {
         this.lastName = lastName;
         this.username = username;
         this.email = email;
+    }
+
+    @PostPersist
+    public void afterSave() {
+        System.out.println("Saved the Client " + getFirebaseId());
     }
 
     public String getFirebaseId() {
@@ -82,12 +85,12 @@ public class Client extends AbstractEntity {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + firebaseId +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+               "id=" + firebaseId +
+               ", firstName='" + firstName + '\'' +
+               ", lastName='" + lastName + '\'' +
+               ", username='" + username + '\'' +
+               ", email='" + email + '\'' +
+               '}';
     }
 
     @Override
@@ -95,12 +98,11 @@ public class Client extends AbstractEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Client)) {
+        if (!(o instanceof Client that)) {
             return false;
         }
-        Client that = (Client) o;
         return Objects.equals(firebaseId, that.firebaseId) &&
-                Objects.equals(username, that.username);
+               Objects.equals(username, that.username);
     }
 
     @Override
