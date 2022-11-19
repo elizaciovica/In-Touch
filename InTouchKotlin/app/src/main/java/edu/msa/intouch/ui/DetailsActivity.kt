@@ -40,7 +40,7 @@ class DetailsActivity : AppCompatActivity() {
         val isClientValid = isClientValid(client)
 
         if (isClientValid) {
-            backendApiService.callCreateClientEndpoint(this, client)
+            backendApiService.createClient(this, client)
         } else {
             Toast.makeText(
                 this,

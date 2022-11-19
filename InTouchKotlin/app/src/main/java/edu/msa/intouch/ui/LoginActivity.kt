@@ -1,17 +1,20 @@
 package edu.msa.intouch.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import edu.msa.intouch.databinding.ActivityLoginBinding
+import edu.msa.intouch.service.BackendApiService
 
 class LoginActivity : AppCompatActivity() {
+
+    private val backendApiService = BackendApiService()
+
     private lateinit var binding: ActivityLoginBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,13 +30,13 @@ class LoginActivity : AppCompatActivity() {
         setContentView(view)
     }
 
-    private fun verifyLoggedInUser() {
-        val user = Firebase.auth.currentUser
-
-        if (user !== null) {
-            user.email?.let { startApplication(user, it) }
-        }
-    }
+//    private fun verifyLoggedInUser() {
+//        val user = Firebase.auth.currentUser
+//
+//        if (user !== null) {
+//            user.email?.let { startApplication() }
+//        }
+//    }
 
     private fun initializeButtons() {
         binding.signUpButton.setOnClickListener {
@@ -77,7 +80,6 @@ class LoginActivity : AppCompatActivity() {
                     .signInWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val firebaseUser: FirebaseUser = task.result!!.user!!
 
                             Toast.makeText(
                                 this,
@@ -85,7 +87,8 @@ class LoginActivity : AppCompatActivity() {
                                 Toast.LENGTH_SHORT
                             ).show()
 
-                            startApplication(firebaseUser, email)
+                            // Call API and see if the user already exists in the DB
+                            backendApiService.getClientById(this)
                         } else {
                             Toast.makeText(
                                 this,
@@ -96,17 +99,5 @@ class LoginActivity : AppCompatActivity() {
                     }
             }
         }
-    }
-
-    private fun startApplication(
-        firebaseUser: FirebaseUser,
-        email: String
-    ) {
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra("userId", firebaseUser.uid)
-        intent.putExtra("email", email)
-        startActivity(intent)
-        finish()
     }
 }

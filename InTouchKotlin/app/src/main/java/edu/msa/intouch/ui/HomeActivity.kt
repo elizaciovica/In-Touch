@@ -32,7 +32,7 @@ class HomeActivity : AppCompatActivity() {
         showPopUp.setOnMenuItemClickListener { menuItem ->
             val id = menuItem.itemId
             if (id == 1) {
-                startActivity(Intent(this, RegisterActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
             false
