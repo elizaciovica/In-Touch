@@ -34,9 +34,11 @@ public class ClientController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public Client getClient(@PathVariable final String firebaseId) {
-        return clientService.get(firebaseId);
+    @GetMapping("/{firebaseId}")
+    public ResponseEntity<Client> getClient(@PathVariable final String firebaseId) {
+        return clientService.get(firebaseId)
+                            .map(client -> ResponseEntity.ok().body(client))
+                            .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
     @GetMapping
