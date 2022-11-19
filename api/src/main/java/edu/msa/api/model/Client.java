@@ -1,19 +1,17 @@
 package edu.msa.api.model;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.PostPersist;
 import java.util.Objects;
 
 @Entity(name = "Client")
 public class Client extends AbstractEntity {
 
     @Id
-    @GeneratedValue(generator = "client_sequence_generator")
-    @SequenceGenerator(
-            name = "client_sequence_generator",
-            sequenceName = "client_sequence",
-            allocationSize = 1
-    )
-    private Integer id;
+    @Column(unique = true)
+    private String firebaseId;
 
     @Column(nullable = false, length = 50)
     private String firstName;
@@ -21,35 +19,35 @@ public class Client extends AbstractEntity {
     @Column(nullable = false, length = 50)
     private String lastName;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String username;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String email;
-
-    @PostPersist
-    public void afterSave() {
-        System.out.println("Saved the Client " + getId());
-    }
 
     public Client() {
 
     }
 
-    public Client(Integer id, String firstName, String lastName, String username, String email) {
-        this.id = id;
+    public Client(String firebaseId, String firstName, String lastName, String username, String email) {
+        this.firebaseId = firebaseId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
     }
 
-    public Integer getId() {
-        return id;
+    @PostPersist
+    public void afterSave() {
+        System.out.println("Saved the Client " + getFirebaseId());
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public String getFirebaseId() {
+        return firebaseId;
+    }
+
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
     }
 
     public String getFirstName() {
@@ -87,12 +85,12 @@ public class Client extends AbstractEntity {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", username='" + username + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+               "id=" + firebaseId +
+               ", firstName='" + firstName + '\'' +
+               ", lastName='" + lastName + '\'' +
+               ", username='" + username + '\'' +
+               ", email='" + email + '\'' +
+               '}';
     }
 
     @Override
@@ -100,17 +98,16 @@ public class Client extends AbstractEntity {
         if (this == o) {
             return true;
         }
-        if (!(o instanceof Client)) {
+        if (!(o instanceof Client that)) {
             return false;
         }
-        Client that = (Client) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(username, that.username);
+        return Objects.equals(firebaseId, that.firebaseId) &&
+               Objects.equals(username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(firebaseId, username);
     }
 }
 

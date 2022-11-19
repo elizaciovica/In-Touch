@@ -17,11 +17,12 @@ public class FirebaseConfig {
         //TODO: add the file in resources and copy the local path here
 
         FileInputStream serviceAccount =
-                new FileInputStream("C:\\Users\\eliza\\StudioProjects\\In-Touch\\api\\src\\main\\resources\\intouch-c623b-firebase-adminsdk-1y17n-cbd7da8104.json");
+                new FileInputStream("C:\\Users\\eliza\\StudioProjects\\In-Touch\\api\\src\\main\\resources\\intouch-c623b" +
+                                    "-firebase-adminsdk-1y17n-cbd7da8104.json");
 
         FirebaseOptions options = FirebaseOptions.builder()
-                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                .build();
+                                                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                                                 .build();
 
         FirebaseApp.initializeApp(options);
     }

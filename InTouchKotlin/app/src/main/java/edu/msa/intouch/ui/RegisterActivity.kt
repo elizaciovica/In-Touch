@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import edu.msa.intouch.databinding.ActivityRegisterBinding
 
 class RegisterActivity : AppCompatActivity() {
@@ -55,14 +54,12 @@ class RegisterActivity : AppCompatActivity() {
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
-                            val firebaseUser: FirebaseUser = task.result!!.user!!
-
                             Toast.makeText(
                                 this,
                                 "Account successfully created",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            startApplication(firebaseUser, email)
+                            startDetailsActivity()
                         } else {
                             Toast.makeText(
                                 this,
@@ -75,11 +72,8 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    private fun startApplication(firebaseUser: FirebaseUser, email: String) {
-        val intent = Intent(this, HomeActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra("userId", firebaseUser.uid)
-        intent.putExtra("email", email)
+    private fun startDetailsActivity() {
+        val intent = Intent(this, DetailsActivity::class.java)
         startActivity(intent)
         finish()
     }
