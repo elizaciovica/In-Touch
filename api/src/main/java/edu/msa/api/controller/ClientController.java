@@ -1,6 +1,5 @@
 package edu.msa.api.controller;
 
-import com.google.firebase.auth.FirebaseAuthException;
 import edu.msa.api.model.Client;
 import edu.msa.api.service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,10 +43,5 @@ public class ClientController {
     public ResponseEntity<?> updateClients(@PathVariable final Integer id, @RequestBody Client client) {
         clientService.update(id, client);
         return ResponseEntity.ok(HttpStatus.OK);
-    }
-
-    @GetMapping("test")
-    public String test() throws FirebaseAuthException {
-        return "Success!";
     }
 }

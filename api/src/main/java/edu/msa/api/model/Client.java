@@ -7,13 +7,8 @@ import java.util.Objects;
 public class Client extends AbstractEntity {
 
     @Id
-    @GeneratedValue(generator = "client_sequence_generator")
-    @SequenceGenerator(
-            name = "client_sequence_generator",
-            sequenceName = "client_sequence",
-            allocationSize = 1
-    )
-    private Integer id;
+    @Column(unique = true)
+    private String firebaseId;
 
     @Column(nullable = false, length = 50)
     private String firstName;
@@ -29,27 +24,27 @@ public class Client extends AbstractEntity {
 
     @PostPersist
     public void afterSave() {
-        System.out.println("Saved the Client " + getId());
+        System.out.println("Saved the Client " + getFirebaseId());
     }
 
     public Client() {
 
     }
 
-    public Client(Integer id, String firstName, String lastName, String username, String email) {
-        this.id = id;
+    public Client(String firebaseId, String firstName, String lastName, String username, String email) {
+        this.firebaseId = firebaseId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.username = username;
         this.email = email;
     }
 
-    public Integer getId() {
-        return id;
+    public String getFirebaseId() {
+        return firebaseId;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setFirebaseId(String firebaseId) {
+        this.firebaseId = firebaseId;
     }
 
     public String getFirstName() {
@@ -87,7 +82,7 @@ public class Client extends AbstractEntity {
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
+                "id=" + firebaseId +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", username='" + username + '\'' +
@@ -104,13 +99,13 @@ public class Client extends AbstractEntity {
             return false;
         }
         Client that = (Client) o;
-        return Objects.equals(id, that.id) &&
+        return Objects.equals(firebaseId, that.firebaseId) &&
                 Objects.equals(username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username);
+        return Objects.hash(firebaseId, username);
     }
 }
 
