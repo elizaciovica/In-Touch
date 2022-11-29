@@ -20,10 +20,9 @@ public class ConnectionController {
         this.connectionService = connectionService;
     }
 
-    @PostMapping("/{senderId}/connect/{receiverId}")
-    public ResponseEntity<?> createConnection(@PathVariable("senderId") Integer senderId,
-                                              @PathVariable("receiverId") Integer receiverId) {
-        connectionService.create(senderId, receiverId);
+    @PostMapping("/{receiverId}")
+    public ResponseEntity<?> createConnection(@PathVariable("receiverId") String receiverId) {
+        connectionService.create(receiverId);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

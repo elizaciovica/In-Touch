@@ -3,7 +3,6 @@ package edu.msa.api.service;
 import edu.msa.api.model.Client;
 import edu.msa.api.repository.ClientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -31,14 +30,19 @@ public class ClientService {
     }
 
     public void update(final String firebaseId, final Client client) {
-//        final Client updatedClient = get(firebaseId);
-//
-//        updatedClient.setUsername(client.getUsername());
-//        updatedClient.setFirstName(client.getFirstName());
-//        updatedClient.setLastName(client.getLastName());
-//        updatedClient.setEmail(client.getEmail());
-//
-//        clientRepository.save(updatedClient);
+        final Optional<Client> updatedClientOptional = get(firebaseId);
+        if (updatedClientOptional.isEmpty()) {
+            throw new IllegalArgumentException("User to be updated not found.");
+        }
+
+        final Client updatedClient = updatedClientOptional.get();
+
+        updatedClient.setUsername(client.getUsername());
+        updatedClient.setFirstName(client.getFirstName());
+        updatedClient.setLastName(client.getLastName());
+        updatedClient.setEmail(client.getEmail());
+
+        clientRepository.save(updatedClient);
     }
 }
 

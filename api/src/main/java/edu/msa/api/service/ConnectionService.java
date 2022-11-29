@@ -6,6 +6,8 @@ import edu.msa.api.model.ConnectionStatus;
 import edu.msa.api.repository.ClientRepository;
 import edu.msa.api.repository.ConnectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -23,18 +25,22 @@ public class ConnectionService {
         this.clientRepository = clientRepository;
     }
 
-    public void create(final Integer senderId, final Integer receiverId) {
-        Client sender = clientRepository.findById(senderId)
-                                        .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
-        Client receiver = clientRepository.findById(receiverId)
-                                          .orElseThrow(() -> new IllegalArgumentException("Receiver not found."));
+    public void create(final String receiverId) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String senderId = authentication.getName();
 
-        Optional<Connection> connection = connectionRepository.findBySenderIdAndReceiverId(sender, receiver);
+        final Client sender = clientRepository.findByFirebaseId(senderId)
+                                              .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
+
+        final Client receiver = clientRepository.findByFirebaseId(receiverId)
+                                                .orElseThrow(() -> new IllegalArgumentException("Receiver not found."));
+
+        final Optional<Connection> connection = connectionRepository.findBySenderIdAndReceiverId(sender, receiver);
         if (connection.isPresent()) {
             throw new IllegalArgumentException("Connection already exists between " + senderId + " and " + receiverId);
         }
 
-        Optional<Connection> reversedConnection = connectionRepository.findBySenderIdAndReceiverId(receiver, sender);
+        final Optional<Connection> reversedConnection = connectionRepository.findBySenderIdAndReceiverId(receiver, sender);
         if (reversedConnection.isPresent()) {
             throw new IllegalArgumentException("Connection already exists between " + senderId + " and " + receiverId);
         }
