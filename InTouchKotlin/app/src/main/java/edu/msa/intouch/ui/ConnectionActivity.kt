@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import edu.msa.intouch.databinding.ActivityConnectionBinding
-import okhttp3.*
-import java.io.IOException
+import edu.msa.intouch.service.BackendApiService
 
 
 class ConnectionActivity : AppCompatActivity() {
+
+    private val backendApiService = BackendApiService()
 
     private lateinit var binding: ActivityConnectionBinding
 
@@ -18,6 +18,11 @@ class ConnectionActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         initializeButtons()
+    }
+
+    private fun setBinding() {
+        binding = ActivityConnectionBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 
     private fun initializeButtons() {
@@ -38,6 +43,7 @@ class ConnectionActivity : AppCompatActivity() {
                 ).show()
             }
             else -> {
+                /*
                 val mUser = FirebaseAuth.getInstance().currentUser
                 mUser!!.getIdToken(true)
                     .addOnCompleteListener { task ->
@@ -78,16 +84,12 @@ class ConnectionActivity : AppCompatActivity() {
                         } else {
                             // Handle error -> task.getException();
                         }
-                    }
 
+                    }
+                */
+                val receiverEmail = binding.connectionEmail.text.toString()
+                backendApiService.createConnection(this, receiverEmail)
             }
         }
     }
-
-    private fun setBinding() {
-        binding = ActivityConnectionBinding.inflate(layoutInflater)
-        setContentView(binding.root)
-    }
-
-
 }

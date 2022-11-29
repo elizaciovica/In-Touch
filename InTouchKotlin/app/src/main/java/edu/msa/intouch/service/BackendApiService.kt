@@ -11,8 +11,7 @@ import edu.msa.intouch.model.Client
 import edu.msa.intouch.ui.DetailsActivity
 import edu.msa.intouch.ui.HomeActivity
 import edu.msa.intouch.util.BackendApiCallTypeEnum
-import edu.msa.intouch.util.BackendApiCallTypeEnum.CREATE_CLIENT
-import edu.msa.intouch.util.BackendApiCallTypeEnum.GET_CLIENT_BY_ID
+import edu.msa.intouch.util.BackendApiCallTypeEnum.*
 import edu.msa.intouch.util.HttpMethodTypeEnum
 import edu.msa.intouch.util.HttpMethodTypeEnum.*
 import okhttp3.*
@@ -20,7 +19,7 @@ import java.io.IOException
 
 class BackendApiService {
 
-    private val BACKEND_API_URL = "https://giqy2gcr9s.loclx.io"
+    private val BACKEND_API_URL = "https://sdtzeggr0z.loclx.io"
     private val JSON = MediaType.parse("application/json; charset=utf-8")
 
     fun getClientById(activity: Activity) {
@@ -37,6 +36,13 @@ class BackendApiService {
         callBackendEndpoint(activity, endpointUrl, requestBody, POST, CREATE_CLIENT)
     }
 
+    fun createConnection(activity: Activity, receiverEmail: String) {
+        val endpointUrl = "/connections/$receiverEmail"
+        val requestBody = RequestBody.create(JSON, Gson().toJson(null))
+
+        callBackendEndpoint(activity, endpointUrl, requestBody, POST, CREATE_CONNECTION)
+    }
+
     private fun callBackendEndpoint(
         activity: Activity,
         endpointUrl: String,
@@ -48,7 +54,7 @@ class BackendApiService {
             ?.getIdToken(true)?.addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val token: String? = task.result.token
-
+                    println(token)
                     // Send token to your backend via HTTPS
                     // Initialize Network Interceptor
                     val networkInterceptor = initializeNetworkInterceptor(token)
@@ -66,6 +72,7 @@ class BackendApiService {
                         when (backendApiCallType) {
                             CREATE_CLIENT -> createClientCallback(activity)
                             GET_CLIENT_BY_ID -> getClientByIdCallback(activity)
+                            CREATE_CONNECTION -> createConnectionCallback(activity)
                         }
                     )
                 } else {
@@ -95,6 +102,23 @@ class BackendApiService {
     }
 
     private fun createClientCallback(activity: Activity) = object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            println("API call failure.")
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            if (response.isSuccessful) {
+                println("Proceeding to start application.")
+                startActivityAction(activity)
+            } else {
+                println("API Response is not successful")
+                showErrorMessage(activity)
+            }
+            response.close()
+        }
+    }
+
+    private fun createConnectionCallback(activity: Activity) = object : Callback {
         override fun onFailure(call: Call, e: IOException) {
             println("API call failure.")
         }
