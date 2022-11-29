@@ -7,4 +7,5 @@ import java.util.Optional;
 
 public interface ClientRepository extends CrudRepository<Client, Integer> {
     Optional<Client> findByFirebaseId(final String firebaseId);
+    Optional<Client> findByEmail(final String email);
 }

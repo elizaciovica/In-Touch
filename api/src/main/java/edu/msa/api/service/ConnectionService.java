@@ -25,24 +25,24 @@ public class ConnectionService {
         this.clientRepository = clientRepository;
     }
 
-    public void create(final String receiverId) {
+    public void create(final String receiverEmail) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final String senderId = authentication.getName();
 
         final Client sender = clientRepository.findByFirebaseId(senderId)
                                               .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
 
-        final Client receiver = clientRepository.findByFirebaseId(receiverId)
+        final Client receiver = clientRepository.findByEmail(receiverEmail)
                                                 .orElseThrow(() -> new IllegalArgumentException("Receiver not found."));
 
         final Optional<Connection> connection = connectionRepository.findBySenderIdAndReceiverId(sender, receiver);
         if (connection.isPresent()) {
-            throw new IllegalArgumentException("Connection already exists between " + senderId + " and " + receiverId);
+            throw new IllegalArgumentException("Connection already exists between " + senderId + " and " + receiverEmail);
         }
 
         final Optional<Connection> reversedConnection = connectionRepository.findBySenderIdAndReceiverId(receiver, sender);
         if (reversedConnection.isPresent()) {
-            throw new IllegalArgumentException("Connection already exists between " + senderId + " and " + receiverId);
+            throw new IllegalArgumentException("Connection already exists between " + senderId + " and " + receiverEmail);
         }
 
         final Connection newConnection = new Connection();
