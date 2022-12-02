@@ -6,18 +6,26 @@ import android.view.Menu
 import android.widget.Button
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import edu.msa.intouch.R
+import edu.msa.intouch.adapter.ConnectionAdapter
 import edu.msa.intouch.databinding.ActivityHomeBinding
-import okhttp3.*
-import java.io.IOException
+import edu.msa.intouch.service.BackendApiService
 
 class HomeActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityHomeBinding
-    private var payload = "Text"
+
+    private val backendApiService = BackendApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
+
+        //just to see the connections
+        getConnections()
 
         val button: Button = binding.homeIcon
 
@@ -42,10 +50,6 @@ class HomeActivity : AppCompatActivity() {
             showPopUp.show()
         }
 
-//        binding.buttonExample.setOnClickListener {
-//            binding.payload.text = payload
-//            getData()
-//        }
         initializeButtons()
 
     }
@@ -53,35 +57,43 @@ class HomeActivity : AppCompatActivity() {
     private fun initializeButtons() {
         binding.connection.setOnClickListener {
             startActivity(Intent(this, ConnectionActivity::class.java))
-            //startActivity(Intent(this@HomeActivity, ConnectionListActivity::class.java))
             finish()
         }
 
     }
 
-    private fun getData() {
-        val client = OkHttpClient()
-        val url = "https://saqrb3ukrq.loclx.io/users"
-
-        val request = Request.Builder()
-            .url(url)
-            .build()
-
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {}
-            override fun onResponse(call: Call, response: Response) {
-                response.use {
-                    if (response.isSuccessful) {
-                        payload = response.body()?.string().toString()
-                    }
-                }
-            }
-        })
-    }
-
     private fun setBinding() {
         binding = ActivityHomeBinding.inflate(layoutInflater)
         setContentView(binding.root)
+    }
+
+    private fun getConnections() {
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+
+        backendApiService.getAllConnections(this, binding)
+        backendApiService.observeConnectionsLiveData().observe(
+            this
+        ) { connectionsList ->
+            if (connectionsList.isNotEmpty()) {
+
+                binding.progressBar.isVisible = false
+                binding.viewForNoConnections.isVisible = false
+                binding.recyclerView.isVisible = true
+
+                connectionsList.forEach {
+                    //binding.textId.text = it.receiverId.firstName
+                    val adapter = ConnectionAdapter(connectionsList)
+                    recyclerView.adapter = adapter
+                }
+            } else {
+
+                binding.progressBar.isVisible = false
+                binding.viewForNoConnections.isVisible = true
+                binding.recyclerView.isVisible = false
+            }
+        }
+
     }
 
 }

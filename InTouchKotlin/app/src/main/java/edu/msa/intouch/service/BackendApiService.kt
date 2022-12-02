@@ -5,8 +5,14 @@ import android.content.Intent
 import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import edu.msa.intouch.databinding.ActivityHomeBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.ui.DetailsActivity
 import edu.msa.intouch.ui.HomeActivity
@@ -17,10 +23,11 @@ import edu.msa.intouch.util.HttpMethodTypeEnum.*
 import okhttp3.*
 import java.io.IOException
 
-class BackendApiService {
+class BackendApiService : ViewModel() {
 
-    private val BACKEND_API_URL = "https://sdtzeggr0z.loclx.io"
+    private val BACKEND_API_URL = "https://jcxqcoouk2.loclx.io"
     private val JSON = MediaType.parse("application/json; charset=utf-8")
+    private var connectionLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
 
     fun getClientById(activity: Activity) {
         val firebaseId = FirebaseAuth.getInstance().currentUser?.uid
@@ -43,12 +50,17 @@ class BackendApiService {
         callBackendEndpoint(activity, endpointUrl, requestBody, POST, CREATE_CONNECTION)
     }
 
+    fun getAllConnections(activity: Activity, binding: ActivityHomeBinding) {
+        val endpointUrl = "/connections"
+        callBackendEndpoint(activity, endpointUrl, null, GET, GET_ALL_CONNECTIONS)
+    }
+
     private fun callBackendEndpoint(
         activity: Activity,
         endpointUrl: String,
         requestBody: RequestBody?,
         httpMethodType: HttpMethodTypeEnum,
-        backendApiCallType: BackendApiCallTypeEnum,
+        backendApiCallType: BackendApiCallTypeEnum
     ) {
         FirebaseAuth.getInstance().currentUser
             ?.getIdToken(true)?.addOnCompleteListener { task ->
@@ -73,6 +85,7 @@ class BackendApiService {
                             CREATE_CLIENT -> createClientCallback(activity)
                             GET_CLIENT_BY_ID -> getClientByIdCallback(activity)
                             CREATE_CONNECTION -> createConnectionCallback(activity)
+                            GET_ALL_CONNECTIONS -> getAllConnectionsCallback(activity)
                         }
                     )
                 } else {
@@ -133,6 +146,35 @@ class BackendApiService {
             }
             response.close()
         }
+
+    }
+
+    private fun getAllConnectionsCallback(activity: Activity) =
+        object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("API call failure.")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    println("API Response successful")
+                    val mapper = jacksonObjectMapper()
+                    var connectionList: List<edu.msa.intouch.model.Connection> =
+                        mapper.readValue(response.body()?.string().toString())
+                    //connectionList.forEach { connectionLiveData.postValue(it.receiverId.firstName) }
+                    connectionLiveData.postValue(connectionList)
+
+
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
+            }
+        }
+
+    fun observeConnectionsLiveData(): LiveData<List<edu.msa.intouch.model.Connection>> {
+        return connectionLiveData
     }
 
     private fun buildRequest(
