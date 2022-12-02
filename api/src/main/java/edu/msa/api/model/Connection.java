@@ -1,5 +1,6 @@
 package edu.msa.api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -28,11 +29,13 @@ public class Connection extends AbstractEntity {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "sender_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Client senderId;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "receiver_id", nullable = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnoreProperties(value = {"applications", "hibernateLazyInitializer"})
     private Client receiverId;
 
     @Column(name = "connection_status", nullable = false)

@@ -14,4 +14,7 @@ public interface ConnectionRepository extends CrudRepository<Connection, Integer
 
     Optional<Connection> findByReceiverIdAndSenderId(@Param(value = "sender_id") final Client receiver,
                                                      @Param(value = "receiver_id") final Client sender);
+
+    Iterable<Connection> findAllByReceiverIdOrSenderId(@Param(value = "sender_id") final Client sender,
+                                                       @Param(value = "receiver_id") final Client receiver);
 }
