@@ -1,13 +1,19 @@
 package edu.msa.api.controller;
 
+import edu.msa.api.model.Connection;
 import edu.msa.api.service.ConnectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @RestController
 @RequestMapping(path = "/connections")
@@ -20,10 +26,15 @@ public class ConnectionController {
         this.connectionService = connectionService;
     }
 
-    @PostMapping("/{senderId}/connect/{receiverId}")
-    public ResponseEntity<?> createConnection(@PathVariable("senderId") Integer senderId,
-                                              @PathVariable("receiverId") Integer receiverId) {
-        connectionService.create(senderId, receiverId);
+    @PostMapping("/{receiverEmail}")
+    public ResponseEntity<?> createConnection(@PathVariable("receiverEmail") final String receiverEmail) {
+        connectionService.create(receiverEmail);
         return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    @GetMapping
+    public List<Connection> getAllConnectionsForCaller() {
+        return StreamSupport.stream(connectionService.getAll().spliterator(), false)
+                            .collect(Collectors.toList());
     }
 }

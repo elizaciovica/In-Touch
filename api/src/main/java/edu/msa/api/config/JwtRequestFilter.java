@@ -2,6 +2,11 @@ package edu.msa.api.config;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -17,6 +22,13 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
+    private final JwtUserDetailsService jwtUserDetailsService;
+
+    @Autowired
+    public JwtRequestFilter(final JwtUserDetailsService jwtUserDetailsService) {
+        this.jwtUserDetailsService = jwtUserDetailsService;
+    }
+
     @Override
     protected void doFilterInternal(final HttpServletRequest request,
                                     final HttpServletResponse response,
@@ -24,11 +36,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         final String authorizationHeader = request.getHeader("Authorization");
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            String token = authorizationHeader.substring("Bearer ".length());
+            final String token = authorizationHeader.substring("Bearer ".length());
 
             try {
-                FirebaseAuth.getInstance().verifyIdToken(token);
-
+                setAuthenticationPrincipalInTheSecurityContextHolder(token);
                 filterChain.doFilter(request, response);
             } catch (FirebaseAuthException exception) {
                 response.setHeader("error", exception.getMessage());
@@ -40,5 +51,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         }
+    }
+
+    private void setAuthenticationPrincipalInTheSecurityContextHolder(final String token) throws FirebaseAuthException {
+        final FirebaseToken firebaseToken = FirebaseAuth.getInstance().verifyIdToken(token);
+        final UserDetails userDetails = jwtUserDetailsService.loadUserByUsername(firebaseToken.getUid());
+        final UsernamePasswordAuthenticationToken authenticationToken =
+                new UsernamePasswordAuthenticationToken(userDetails, null);
+
+        SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     }
 }
