@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.Button
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -16,20 +17,20 @@ class ConnectionListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConnectionListBinding
 
-    private var clientList: List<Client> = listOf(
+    val clientList: List<Client> = listOf(
         Client(
             "Zc7jNTj3F9QeUaGERr9Iur8cbVH2",
-            "Test",
-            "Test",
-            "test",
-            "test@gmail.com"
+            "Harry",
+            "Potter",
+            "harrypotter",
+            "harrypotter@gmail.com"
         ),
         Client(
             "nKITPeDVZ2OymvegGrzG4aimTnm1",
-            "Test1",
-            "Test1",
-            "test1",
-            "test1@gmail.com"
+            "Hermione",
+            "Granger",
+            "hermionegranger",
+            "hermionegranger@gmail.com"
         )
     )
 
@@ -49,7 +50,7 @@ class ConnectionListActivity : AppCompatActivity() {
     }
 
     private fun initList(connectionList: List<Client>){
-        listAdapterConnections = ConnectionListAdapter(clientList);
+        listAdapterConnections = ConnectionListAdapter(connectionList);
 
         recyclerView = binding.connectionList
         val mLayoutManager: RecyclerView.LayoutManager = GridLayoutManager(this, 2)
@@ -59,6 +60,8 @@ class ConnectionListActivity : AppCompatActivity() {
         listAdapterConnections.setOnItemClickListener(object: ConnectionListAdapter.onItemClickListener{
             override fun onItemClick(position: Int) {
                 val sharedConnection = Intent(this@ConnectionListActivity, SharedConnectionActivity::class.java)
+                var selectedUser = clientList.get(position).firebaseId
+                sharedConnection.putExtra("userId", selectedUser)
                 startActivity(sharedConnection)
             }
 

@@ -13,7 +13,7 @@ class ConnectionAdapter(private val dataSet: List<edu.msa.intouch.model.Connecti
     RecyclerView.Adapter<ConnectionAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val nameTextView = itemView.findViewById<TextView>(R.id.useremail)
+        val nameTextView = itemView.findViewById<TextView>(R.id.name)
         //todo add profile image in database so we can use it here
         val imageView = itemView.findViewById<ImageView>(R.id.profile)
     }

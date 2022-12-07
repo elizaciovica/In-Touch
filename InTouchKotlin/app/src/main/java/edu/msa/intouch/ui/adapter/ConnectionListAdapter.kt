@@ -23,7 +23,7 @@ class ConnectionListAdapter(private val connectionList: List<Client>) : Recycler
     override fun onBindViewHolder(holder: ConnectionListHolder, position: Int) {
         val itemsViewModel = connectionList[position]
 
-        holder.textView.text = itemsViewModel.email
+        holder.textView.text = itemsViewModel.firstName
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ConnectionListHolder {
@@ -38,7 +38,7 @@ class ConnectionListAdapter(private val connectionList: List<Client>) : Recycler
     }
 
     inner class ConnectionListHolder(ItemView: View, listener: onItemClickListener) : RecyclerView.ViewHolder(ItemView) {
-        val textView: TextView = itemView.findViewById(R.id.useremail)
+        val textView: TextView = itemView.findViewById(R.id.name)
 
         init {
             itemView.setOnClickListener{

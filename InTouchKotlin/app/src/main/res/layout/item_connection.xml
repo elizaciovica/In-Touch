@@ -30,10 +30,11 @@
             android:layout_marginBottom="8dp">
 
             <TextView
-                android:id="@+id/useremail"
+                android:id="@+id/name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="User Email"
+                android:text="User Name"
+                android:maxLines="2"
                 android:textAlignment="center"
                 android:textSize="15sp"
                 android:layout_marginTop="5dp"
