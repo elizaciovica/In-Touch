@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.msa.intouch.R
 import edu.msa.intouch.adapter.ConnectionAdapter
 import edu.msa.intouch.databinding.ActivityHomeBinding
+import edu.msa.intouch.model.ConnectionStatus
 import edu.msa.intouch.service.BackendApiService
 
 class HomeActivity : AppCompatActivity() {
@@ -71,7 +72,7 @@ class HomeActivity : AppCompatActivity() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        backendApiService.getAllConnections(this, binding)
+        backendApiService.getAllConnectionsByStatus(this, ConnectionStatus.ACCEPTED.status)
         backendApiService.observeConnectionsLiveData().observe(
             this
         ) { connectionsList ->

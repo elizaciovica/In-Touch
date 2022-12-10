@@ -50,9 +50,9 @@ class BackendApiService : ViewModel() {
         callBackendEndpoint(activity, endpointUrl, requestBody, POST, CREATE_CONNECTION)
     }
 
-    fun getAllConnections(activity: Activity, binding: ActivityHomeBinding) {
-        val endpointUrl = "/connections"
-        callBackendEndpoint(activity, endpointUrl, null, GET, GET_ALL_CONNECTIONS)
+    fun getAllConnectionsByStatus(activity: Activity, status: Int) {
+        val endpointUrl = "/connections/$status"
+        callBackendEndpoint(activity, endpointUrl, null, GET, GET_ALL_CONNECTIONS_BY_STATUS)
     }
 
     private fun callBackendEndpoint(
@@ -85,7 +85,7 @@ class BackendApiService : ViewModel() {
                             CREATE_CLIENT -> createClientCallback(activity)
                             GET_CLIENT_BY_ID -> getClientByIdCallback(activity)
                             CREATE_CONNECTION -> createConnectionCallback(activity)
-                            GET_ALL_CONNECTIONS -> getAllConnectionsCallback(activity)
+                            GET_ALL_CONNECTIONS_BY_STATUS -> getAllConnectionsCallback(activity)
                         }
                     )
                 } else {
