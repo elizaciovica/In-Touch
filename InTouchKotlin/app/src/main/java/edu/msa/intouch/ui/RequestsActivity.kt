@@ -10,23 +10,20 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import edu.msa.intouch.R
-import edu.msa.intouch.adapter.ConnectionAdapter
-import edu.msa.intouch.databinding.ActivityHomeBinding
+import edu.msa.intouch.adapter.RequestAdapter
+import edu.msa.intouch.databinding.ActivityRequestsBinding
 import edu.msa.intouch.model.ConnectionStatus
 import edu.msa.intouch.service.BackendApiService
 
-class HomeActivity : AppCompatActivity() {
+class RequestsActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHomeBinding
+    private lateinit var binding: ActivityRequestsBinding
 
     private val backendApiService = BackendApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
-
-        //just to see the connections
-        getConnections()
 
         val button: Button = binding.homeIcon
 
@@ -51,34 +48,21 @@ class HomeActivity : AppCompatActivity() {
             showPopUp.show()
         }
 
-        initializeButtons()
-
-    }
-
-    private fun initializeButtons() {
-        binding.connection.setOnClickListener {
-            startActivity(Intent(this, ConnectionActivity::class.java))
-            finish()
-        }
-
-        binding.requestId.setOnClickListener {
-            startActivity(Intent(this, RequestsActivity::class.java))
-            finish()
-        }
+        getRequestConnections()
 
     }
 
     private fun setBinding() {
-        binding = ActivityHomeBinding.inflate(layoutInflater)
+        binding = ActivityRequestsBinding.inflate(layoutInflater)
         setContentView(binding.root)
     }
 
-    private fun getConnections() {
+    private fun getRequestConnections() {
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        backendApiService.getAllConnectionsByStatus(this, ConnectionStatus.ACCEPTED.status)
-        backendApiService.observeConnectionsLiveData().observe(
+        backendApiService.getAllConnectionRequestsByStatus(this, ConnectionStatus.PENDING.status)
+        backendApiService.observeRequestsLiveData().observe(
             this
         ) { connectionsList ->
             if (connectionsList.isNotEmpty()) {
@@ -88,8 +72,7 @@ class HomeActivity : AppCompatActivity() {
                 binding.recyclerView.isVisible = true
 
                 connectionsList.forEach {
-                    //binding.textId.text = it.receiverId.firstName
-                    val adapter = ConnectionAdapter(connectionsList)
+                    val adapter = RequestAdapter(connectionsList)
                     recyclerView.adapter = adapter
                 }
             } else {
@@ -101,5 +84,4 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
-
 }

@@ -23,11 +23,12 @@ import edu.msa.intouch.util.HttpMethodTypeEnum.*
 import okhttp3.*
 import java.io.IOException
 
-class BackendApiService : ViewModel() {
+class  BackendApiService : ViewModel() {
 
-    private val BACKEND_API_URL = "https://jcxqcoouk2.loclx.io"
+    private val BACKEND_API_URL = "https://iigyqz9kqc.loclx.io"
     private val JSON = MediaType.parse("application/json; charset=utf-8")
     private var connectionLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
+    private var requestsLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
 
     fun getClientById(activity: Activity) {
         val firebaseId = FirebaseAuth.getInstance().currentUser?.uid
@@ -53,6 +54,11 @@ class BackendApiService : ViewModel() {
     fun getAllConnectionsByStatus(activity: Activity, status: Int) {
         val endpointUrl = "/connections/$status"
         callBackendEndpoint(activity, endpointUrl, null, GET, GET_ALL_CONNECTIONS_BY_STATUS)
+    }
+
+    fun getAllConnectionRequestsByStatus(activity: Activity, status: Int) {
+        val endpointUrl = "/connections/$status/request"
+        callBackendEndpoint(activity, endpointUrl, null, GET, GET_ALL_CONNECTION_REQUESTS_BY_STATUS)
     }
 
     private fun callBackendEndpoint(
@@ -86,6 +92,7 @@ class BackendApiService : ViewModel() {
                             GET_CLIENT_BY_ID -> getClientByIdCallback(activity)
                             CREATE_CONNECTION -> createConnectionCallback(activity)
                             GET_ALL_CONNECTIONS_BY_STATUS -> getAllConnectionsCallback(activity)
+                            GET_ALL_CONNECTION_REQUESTS_BY_STATUS -> getAllConnectionRequestsCallback(activity)
                         }
                     )
                 } else {
@@ -175,6 +182,33 @@ class BackendApiService : ViewModel() {
 
     fun observeConnectionsLiveData(): LiveData<List<edu.msa.intouch.model.Connection>> {
         return connectionLiveData
+    }
+
+    private fun getAllConnectionRequestsCallback(activity: Activity) =
+        object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("API call failure.")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    println("API Response successful")
+                    val mapper = jacksonObjectMapper()
+                    var requestsList: List<edu.msa.intouch.model.Connection> =
+                        mapper.readValue(response.body()?.string().toString())
+                    //connectionList.forEach { connectionLiveData.postValue(it.receiverId.firstName) }
+                    requestsLiveData.postValue(requestsList)
+
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
+            }
+        }
+
+    fun observeRequestsLiveData(): LiveData<List<edu.msa.intouch.model.Connection>> {
+        return requestsLiveData
     }
 
     private fun buildRequest(
