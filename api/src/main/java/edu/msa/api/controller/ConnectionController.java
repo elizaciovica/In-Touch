@@ -37,4 +37,10 @@ public class ConnectionController {
         return StreamSupport.stream(connectionService.getAllConnectionsByConnectionStatus(connectionStatus).spliterator(), false)
                             .collect(Collectors.toList());
     }
+
+    @GetMapping("/{connectionStatus}/request")
+    public List<Connection> getAllConnectionRequestsForCaller(@PathVariable("connectionStatus") final Integer connectionStatus) {
+        return StreamSupport.stream(connectionService.getAllConnectionRequestsByConnectionStatus(connectionStatus).spliterator(), false)
+                            .collect(Collectors.toList());
+    }
 }

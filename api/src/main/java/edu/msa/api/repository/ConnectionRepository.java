@@ -21,4 +21,13 @@ public interface ConnectionRepository extends CrudRepository<Connection, Integer
     Iterable<Connection> findAllByReceiverIdOrSenderIdAndConnectionStatus(final Client sender,
                                                                           final Client receiver,
                                                                           final Integer connectionStatus);
+
+    @Query(value = "SELECT * " +
+                   "FROM connection " +
+                   "WHERE receiver_id = ?1 " +
+                   "AND connection_status = ?2",
+           nativeQuery = true)
+    Iterable<Connection> findAllByReceiverIdAndConnectionStatus(final Client receiver,
+                                                                final Integer connectionStatus);
+
 }
