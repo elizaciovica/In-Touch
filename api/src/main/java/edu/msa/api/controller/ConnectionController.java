@@ -32,9 +32,15 @@ public class ConnectionController {
         return ResponseEntity.ok(HttpStatus.OK);
     }
 
-    @GetMapping
-    public List<Connection> getAllConnectionsForCaller() {
-        return StreamSupport.stream(connectionService.getAll().spliterator(), false)
+    @GetMapping("/{connectionStatus}")
+    public List<Connection> getAllConnectionsForCaller(@PathVariable("connectionStatus") final Integer connectionStatus) {
+        return StreamSupport.stream(connectionService.getAllConnectionsByConnectionStatus(connectionStatus).spliterator(), false)
+                            .collect(Collectors.toList());
+    }
+
+    @GetMapping("/{connectionStatus}/request")
+    public List<Connection> getAllConnectionRequestsForCaller(@PathVariable("connectionStatus") final Integer connectionStatus) {
+        return StreamSupport.stream(connectionService.getAllConnectionRequestsByConnectionStatus(connectionStatus).spliterator(), false)
                             .collect(Collectors.toList());
     }
 }

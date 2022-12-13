@@ -58,14 +58,24 @@ public class ConnectionService {
                                    .orElseThrow(() -> new IllegalArgumentException("Not found"));
     }
 
-    public Iterable<Connection> getAll() {
+    public Iterable<Connection> getAllConnectionsByConnectionStatus(final Integer connectionStatus) {
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         final String firebaseId = authentication.getName();
 
         final Client client = clientRepository.findByFirebaseId(firebaseId)
                                               .orElseThrow(() -> new IllegalArgumentException("Caller Client not found."));
 
-        return connectionRepository.findAllByReceiverIdOrSenderId(client, client);
+        return connectionRepository.findAllByReceiverIdOrSenderIdAndConnectionStatus(client, client, connectionStatus);
+    }
+
+    public Iterable<Connection> getAllConnectionRequestsByConnectionStatus(final Integer connectionStatus) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String firebaseId = authentication.getName();
+
+        final Client client = clientRepository.findByFirebaseId(firebaseId)
+                                              .orElseThrow(() -> new IllegalArgumentException("Caller Client not found."));
+
+        return connectionRepository.findAllByReceiverIdAndConnectionStatus(client, connectionStatus);
     }
 
     public void update(final Integer id, final Connection connection) {
