@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import edu.msa.intouch.R
 import edu.msa.intouch.model.Client
 
-class ConnectionListAdapter(private val connectionList: List<Client>) : RecyclerView.Adapter<ConnectionListAdapter.ConnectionListHolder>(){
+class ConnectionListAdapter(private val connectionList: ArrayList<Client>) : RecyclerView.Adapter<ConnectionListAdapter.ConnectionListHolder>(){
 
     private lateinit var mListener : onItemClickListener
 

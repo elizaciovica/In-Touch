@@ -1,22 +1,23 @@
 package edu.msa.intouch.ui
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.TextView
-import android.widget.Toast
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.FirebaseDatabase
+import android.widget.*
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.database.*
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityChatBinding
+import edu.msa.intouch.model.Chat
 import edu.msa.intouch.model.Client
+import edu.msa.intouch.ui.adapter.ChatAdapter
 
 class ChatActivity : AppCompatActivity() {
     private lateinit var binding: ActivityChatBinding
+    var chatList = ArrayList<Chat>()
+    private lateinit var recyclerView: RecyclerView
 
-    private val currentUser : Client = Client(
+    val currentUser : Client = Client(
         "tDr9Q2yibFM914AvaMP0vaevo232",
         "Diana",
         "Miscuta",
@@ -28,8 +29,11 @@ class ChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
         setBiding()
+        recyclerView = binding.chatRecyclerView
+        recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         setUserDetails()
         initializeButtons()
+        readMessage(currentUser.firebaseId, (intent.extras?.getString("userId").toString()))
     }
 
     private fun setBiding() {
@@ -74,5 +78,32 @@ class ChatActivity : AppCompatActivity() {
         reference.child("Chats").push().setValue(hashMap)
 
         //https://intouch-c623b-default-rtdb.europe-west1.firebasedatabase.app/
+    }
+
+    fun readMessage(senderId: String, receiverId: String) {
+        val databaseReference: DatabaseReference =
+            FirebaseDatabase.getInstance().getReference("Chats")
+
+        databaseReference.addValueEventListener(object : ValueEventListener {
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+                chatList.clear()
+                for (dataSnapShot: DataSnapshot in snapshot.children) {
+                    val chat = dataSnapShot.getValue(Chat::class.java)
+                    if (chat!!.sender.equals(senderId) && chat!!.receiver.equals(receiverId) ||
+                        chat!!.sender.equals(receiverId) && chat!!.receiver.equals(senderId)
+                    ) {
+                        chatList.add(chat)
+                    }
+                }
+
+                val chatAdapter = ChatAdapter(this@ChatActivity, chatList)
+
+                recyclerView.adapter = chatAdapter
+            }
+        })
     }
 }

@@ -31,9 +31,13 @@
 
     <Button
         android:id="@+id/chatBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:text="Chat"
-        android:layout_marginTop="40dp"/>
+        android:layout_marginTop="40dp"
+        android:backgroundTint="#DDB0AD"
+        android:textSize="15sp"
+        android:textColor="#570924"
+        />
 
 </LinearLayout>

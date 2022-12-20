@@ -17,7 +17,7 @@ class ConnectionListActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityConnectionListBinding
 
-    val clientList: List<Client> = listOf(
+    val clientList: ArrayList<Client> = arrayListOf(
         Client(
             "Zc7jNTj3F9QeUaGERr9Iur8cbVH2",
             "Harry",
@@ -49,7 +49,7 @@ class ConnectionListActivity : AppCompatActivity() {
         setContentView(binding.root);
     }
 
-    private fun initList(connectionList: List<Client>){
+    private fun initList(connectionList: ArrayList<Client>){
         listAdapterConnections = ConnectionListAdapter(connectionList);
 
         recyclerView = binding.connectionList
