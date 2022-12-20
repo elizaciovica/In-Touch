@@ -6,6 +6,8 @@ import edu.msa.api.model.ConnectionStatus;
 import edu.msa.api.repository.ClientRepository;
 import edu.msa.api.repository.ConnectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -84,5 +86,42 @@ public class ConnectionService {
         updatedConnection.setSenderId(connection.getSenderId());
 
         connectionRepository.save(updatedConnection);
+    }
+
+    public ResponseEntity<?> changeConnectionStatusFromPendingToAccepted(final String senderId) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String firebaseId = authentication.getName();
+
+        final Client receiver = clientRepository.findByFirebaseId(firebaseId)
+                                                .orElseThrow(() -> new IllegalArgumentException("Caller Client not found."));
+        final Client sender = clientRepository.findByFirebaseId(senderId)
+                                              .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
+
+        final Connection connection =
+                connectionRepository.findByReceiverIdAndSenderId(receiver, sender)
+                                    .orElseThrow(() -> new IllegalArgumentException("Connection not found."));
+
+        connection.setConnectionStatus(ConnectionStatus.ACCEPTED.getStatus());
+        connectionRepository.save(connection);
+
+        return ResponseEntity.ok(HttpStatus.OK);
+    }
+
+    public ResponseEntity<?> deleteConnection(final String senderId) {
+        final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        final String firebaseId = authentication.getName();
+
+        final Client receiver = clientRepository.findByFirebaseId(firebaseId)
+                                                .orElseThrow(() -> new IllegalArgumentException("Caller Client not found."));
+        final Client sender = clientRepository.findByFirebaseId(senderId)
+                                              .orElseThrow(() -> new IllegalArgumentException("Sender not found."));
+
+        final Connection connection =
+                connectionRepository.findByReceiverIdAndSenderId(receiver, sender)
+                                    .orElseThrow(() -> new IllegalArgumentException("Connection not found."));
+
+        connectionRepository.delete(connection);
+
+        return ResponseEntity.ok(HttpStatus.OK);
     }
 }

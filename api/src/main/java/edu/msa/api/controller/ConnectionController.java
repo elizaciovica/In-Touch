@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -43,4 +44,15 @@ public class ConnectionController {
         return StreamSupport.stream(connectionService.getAllConnectionRequestsByConnectionStatus(connectionStatus).spliterator(), false)
                             .collect(Collectors.toList());
     }
+
+    @PutMapping("/{senderId}/accept")
+    public ResponseEntity<?> changeConnectionFromPendingToAccepted(@PathVariable("senderId") final String senderId) {
+        return connectionService.changeConnectionStatusFromPendingToAccepted(senderId);
+    }
+
+    @PutMapping("/{senderId}/delete")
+    public ResponseEntity<?> deleteConnection(@PathVariable("senderId") final String senderId) {
+        return connectionService.deleteConnection(senderId);
+    }
+
 }
