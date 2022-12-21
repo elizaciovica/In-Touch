@@ -29,7 +29,6 @@ class SharedConnectionActivity : AppCompatActivity() {
             chatIntent.putExtra("userId", intent.extras?.getString("userId"))
             startActivity(chatIntent)
         }
-
     }
 
     private fun setUserDetails(){
