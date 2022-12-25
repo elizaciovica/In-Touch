@@ -72,7 +72,7 @@ class RequestsActivity : AppCompatActivity() {
                 binding.recyclerView.isVisible = true
 
                 connectionsList.forEach {
-                    val adapter = RequestAdapter(connectionsList)
+                    val adapter = RequestAdapter(connectionsList, this)
                     recyclerView.adapter = adapter
                 }
             } else {
