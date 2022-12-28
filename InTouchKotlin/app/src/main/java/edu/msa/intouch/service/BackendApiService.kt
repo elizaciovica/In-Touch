@@ -12,10 +12,10 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
-import edu.msa.intouch.databinding.ActivityHomeBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.ui.DetailsActivity
 import edu.msa.intouch.ui.HomeActivity
+import edu.msa.intouch.ui.RequestsActivity
 import edu.msa.intouch.util.BackendApiCallTypeEnum
 import edu.msa.intouch.util.BackendApiCallTypeEnum.*
 import edu.msa.intouch.util.HttpMethodTypeEnum
@@ -23,9 +23,9 @@ import edu.msa.intouch.util.HttpMethodTypeEnum.*
 import okhttp3.*
 import java.io.IOException
 
-class  BackendApiService : ViewModel() {
+class BackendApiService : ViewModel() {
 
-    private val BACKEND_API_URL = "https://iigyqz9kqc.loclx.io"
+    private val BACKEND_API_URL = "https://dmtj8wgjla.loclx.io"
     private val JSON = MediaType.parse("application/json; charset=utf-8")
     private var connectionLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
     private var requestsLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
@@ -61,6 +61,18 @@ class  BackendApiService : ViewModel() {
         callBackendEndpoint(activity, endpointUrl, null, GET, GET_ALL_CONNECTION_REQUESTS_BY_STATUS)
     }
 
+    fun updateConnectionStatusFromPendingToAccepted(activity: Activity, senderId: String) {
+        val endpointUrl = "/connections/$senderId/accept"
+        val requestBody = RequestBody.create(JSON, Gson().toJson(null))
+        callBackendEndpoint(activity, endpointUrl, requestBody, PUT, UPDATE_CONNECTION_STATUS)
+    }
+
+    fun deleteConnectionRequest(activity: Activity, senderId: String) {
+        val endpointUrl = "/connections/$senderId/delete"
+        val requestBody = RequestBody.create(JSON, Gson().toJson(null))
+        callBackendEndpoint(activity, endpointUrl, requestBody, PUT, DELETE_CONNECTION_REQUEST)
+    }
+
     private fun callBackendEndpoint(
         activity: Activity,
         endpointUrl: String,
@@ -92,7 +104,11 @@ class  BackendApiService : ViewModel() {
                             GET_CLIENT_BY_ID -> getClientByIdCallback(activity)
                             CREATE_CONNECTION -> createConnectionCallback(activity)
                             GET_ALL_CONNECTIONS_BY_STATUS -> getAllConnectionsCallback(activity)
-                            GET_ALL_CONNECTION_REQUESTS_BY_STATUS -> getAllConnectionRequestsCallback(activity)
+                            GET_ALL_CONNECTION_REQUESTS_BY_STATUS ->
+                                getAllConnectionRequestsCallback(activity)
+                            UPDATE_CONNECTION_STATUS ->
+                                updateConnectionStatusFromPendingToAcceptedCallback(activity)
+                            DELETE_CONNECTION_REQUEST -> deleteConnectionRequestCallback(activity)
                         }
                     )
                 } else {
@@ -209,6 +225,45 @@ class  BackendApiService : ViewModel() {
 
     fun observeRequestsLiveData(): LiveData<List<edu.msa.intouch.model.Connection>> {
         return requestsLiveData
+    }
+
+    private fun updateConnectionStatusFromPendingToAcceptedCallback(activity: Activity) =
+        object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                println("API call failure.")
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                if (response.isSuccessful) {
+                    println("Proceeding to start application.")
+                    activity.startActivity(Intent(activity, HomeActivity::class.java))
+                    activity.finish()
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
+            }
+
+        }
+
+    private fun deleteConnectionRequestCallback(activity: Activity) = object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            println("API call failure.")
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            if (response.isSuccessful) {
+                println("Proceeding to start application.")
+                activity.startActivity(Intent(activity, RequestsActivity::class.java))
+                activity.finish()
+            } else {
+                println("API Response is not successful")
+                showErrorMessage(activity)
+            }
+            response.close()
+        }
+
     }
 
     private fun buildRequest(
