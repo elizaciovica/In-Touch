@@ -1,13 +1,19 @@
 package edu.msa.intouch.ui
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.databinding.ActivityConnectionBinding
 import edu.msa.intouch.service.BackendApiService
 
@@ -15,27 +21,34 @@ import edu.msa.intouch.service.BackendApiService
 class ConnectionActivity : AppCompatActivity() {
 
     private val backendApiService = BackendApiService()
+    private var storageRef = Firebase.storage
 
     private lateinit var binding: ActivityConnectionBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
+        getProfilePicture()
+        getMenu()
         initializeButtons()
-        val button: Button = binding.homeIcon
+
+    }
+
+    private fun getMenu() {
+        val button: ImageButton = binding.homeIcon
 
         val showPopUp = PopupMenu(
             this,
             button
         )
 
-        showPopUp.menu.add(Menu.NONE, 0, 0, "Upload profile photo")
+        //showPopUp.menu.add(Menu.NONE, 0, 0, "Upload profile photo")
         showPopUp.menu.add(Menu.NONE, 1, 1, "Log Out")
 
         showPopUp.setOnMenuItemClickListener { menuItem ->
             val id = menuItem.itemId
             if (id == 1) {
-                startActivity(Intent(this, RegisterActivity::class.java))
+                startActivity(Intent(this, LoginActivity::class.java))
                 finish()
             }
             false
@@ -69,53 +82,29 @@ class ConnectionActivity : AppCompatActivity() {
                 ).show()
             }
             else -> {
-                /*
-                val mUser = FirebaseAuth.getInstance().currentUser
-                mUser!!.getIdToken(true)
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            val token: String? = task.result.token
-                            println(token)
-                            // Send token to your backend via HTTPS
-                            // Initialize Network Interceptor
-                            val networkInterceptor = Interceptor { chain ->
-                                val newRequest = chain.request().newBuilder()
-                                    .addHeader("Authorization", "Bearer $token")
-                                    .build()
-                                val response = chain.proceed(newRequest)
-
-                                response.newBuilder().build()
-                            }
-                            // Build OkHttpClient
-                            val client = OkHttpClient.Builder()
-                                .addNetworkInterceptor(networkInterceptor)
-                                .build()
-
-                            val request = Request.Builder()
-                                .url("https://yfv5brx1l4.loclx.io/users/test")
-                                .build()
-
-                            client.newCall(request).enqueue(object : Callback {
-                                override fun onFailure(call: Call, e: IOException) {}
-                                override fun onResponse(call: Call, response: Response) {
-                                    response.use {
-                                        if (response.isSuccessful) {
-                                            println(response.body()?.string().toString())
-                                        }
-                                    }
-                                }
-                            })
-
-
-                        } else {
-                            // Handle error -> task.getException();
-                        }
-
-                    }
-                */
                 val receiverEmail = binding.connectionEmail.text.toString()
                 backendApiService.createConnection(this, receiverEmail)
             }
+        }
+    }
+
+    private fun getProfilePicture() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        var islandRef = storageRef.reference.child("images/$userId")
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
         }
     }
 }

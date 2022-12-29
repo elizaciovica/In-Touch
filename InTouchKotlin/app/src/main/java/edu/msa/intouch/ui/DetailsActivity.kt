@@ -1,17 +1,31 @@
 package edu.msa.intouch.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.text.TextUtils
+import android.widget.ImageButton
 import android.widget.Toast
+import androidx.activity.result.ActivityResultCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.databinding.ActivityDetailsBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.service.BackendApiService
+import java.net.URI
 
 class DetailsActivity : AppCompatActivity() {
 
     private val backendApiService = BackendApiService()
+    private lateinit var profilePicture: ImageButton
+    private lateinit var uri: Uri
+    private var storageRef = Firebase.storage
 
     private lateinit var binding: ActivityDetailsBinding
 
@@ -19,6 +33,7 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         initializeButtons()
+        uploadImage()
     }
 
     private fun setBinding() {
@@ -79,5 +94,45 @@ class DetailsActivity : AppCompatActivity() {
             username,
             email
         )
+    }
+
+    private fun uploadImage() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+
+        profilePicture = binding.homeIcon
+        storageRef = FirebaseStorage.getInstance()
+
+        val galleryImage = registerForActivityResult(
+            ActivityResultContracts.GetContent(),
+            ActivityResultCallback {
+                profilePicture.setImageURI(it)
+                uri = it!!
+            }
+        )
+        binding.uploadImageButton.setOnClickListener() {
+            galleryImage.launch("image/+")
+        }
+
+        binding.upload.setOnClickListener {
+            storageRef.getReference("images").child(userId)
+                .putFile(uri)
+                .addOnSuccessListener {
+
+                    val mapImage = mapOf(
+                        "url" to it.toString()
+                    )
+
+                    val databaseReference = FirebaseDatabase.getInstance().getReference("userImages")
+                    databaseReference.child(userId).setValue(mapImage)
+                        .addOnSuccessListener {
+                            Toast.makeText(this, "Image successfully uploaded", Toast.LENGTH_SHORT).show()
+                        }
+                        .addOnFailureListener() { error ->
+                            Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
+                        }
+
+                }
+        }
+
     }
 }
