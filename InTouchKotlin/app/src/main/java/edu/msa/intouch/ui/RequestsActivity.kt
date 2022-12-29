@@ -1,14 +1,20 @@
 package edu.msa.intouch.ui
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.Menu
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.adapter.RequestAdapter
 import edu.msa.intouch.databinding.ActivityRequestsBinding
@@ -18,14 +24,21 @@ import edu.msa.intouch.service.BackendApiService
 class RequestsActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityRequestsBinding
+    private var storageRef = Firebase.storage
 
     private val backendApiService = BackendApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
+        getMenu()
+        getProfilePicture()
+        getRequestConnections()
 
-        val button: Button = binding.homeIcon
+    }
+
+    private fun getMenu() {
+        val button: ImageButton = binding.homeIcon
 
         val showPopUp = PopupMenu(
             this,
@@ -47,9 +60,6 @@ class RequestsActivity : AppCompatActivity() {
         button.setOnClickListener {
             showPopUp.show()
         }
-
-        getRequestConnections()
-
     }
 
     private fun setBinding() {
@@ -82,6 +92,25 @@ class RequestsActivity : AppCompatActivity() {
                 binding.recyclerView.isVisible = false
             }
         }
+    }
 
+    private fun getProfilePicture() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        var islandRef = storageRef.reference.child("images/$userId")
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
+        }
     }
 }

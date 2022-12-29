@@ -1,14 +1,21 @@
 package edu.msa.intouch.ui
 
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
-import android.widget.Button
+import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.adapter.ConnectionAdapter
 import edu.msa.intouch.databinding.ActivityHomeBinding
@@ -17,6 +24,10 @@ import edu.msa.intouch.service.BackendApiService
 
 class HomeActivity : AppCompatActivity() {
 
+    private var storageRef = Firebase.storage
+    private lateinit var profilePicture: ImageButton
+    private lateinit var uri: Uri
+
     private lateinit var binding: ActivityHomeBinding
 
     private val backendApiService = BackendApiService()
@@ -24,18 +35,22 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
-
-        //just to see the connections
+        getProfilePicture()
         getConnections()
+        getMenu()
+        initializeButtons()
 
-        val button: Button = binding.homeIcon
+    }
+
+    private fun getMenu() {
+        val button: ImageButton = binding.homeIcon
 
         val showPopUp = PopupMenu(
             this,
             button
         )
 
-        showPopUp.menu.add(Menu.NONE, 0, 0, "Upload profile photo")
+        //showPopUp.menu.add(Menu.NONE, 0, 0, "Change profile picture")
         showPopUp.menu.add(Menu.NONE, 1, 1, "Log Out")
 
         showPopUp.setOnMenuItemClickListener { menuItem ->
@@ -50,20 +65,15 @@ class HomeActivity : AppCompatActivity() {
         button.setOnClickListener {
             showPopUp.show()
         }
-
-        initializeButtons()
-
     }
 
     private fun initializeButtons() {
         binding.connection.setOnClickListener {
             startActivity(Intent(this, ConnectionActivity::class.java))
-            finish()
         }
 
         binding.requestId.setOnClickListener {
             startActivity(Intent(this, RequestsActivity::class.java))
-            finish()
         }
 
     }
@@ -102,4 +112,38 @@ class HomeActivity : AppCompatActivity() {
 
     }
 
+    private fun getProfilePicture() {
+        val userId = FirebaseAuth.getInstance().currentUser!!.uid
+        var islandRef = storageRef.reference.child("images/$userId")
+        val ONE_MEGABYTE: Long = 1024 * 1024
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            //binding.homeIcon.setImageBitmap(Bitmap.createScaledBitmap(bitmap, binding.homeIcon.width, binding.homeIcon.height, false))
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+
+            //todo not working for round corners
+//            val copyof = bitmap.copy(Bitmap.Config.ARGB_8888, true)
+//            val canvas = Canvas(copyof)
+//
+//            val rect = Rect(0, 0, copyof.width, copyof.height)
+//            val rectF = RectF(rect)
+//            lateinit var paint : Paint
+//            paint = Paint()
+//            paint.isAntiAlias = true
+//            canvas.drawRoundRect(rectF, 200.toFloat(), 200.toFloat(), paint)
+//            paint.setXfermode(PorterDuffXfermode(PorterDuff.Mode.SRC_IN))
+//            canvas.drawBitmap(copyof, rect, rect, paint)
+
+        }.addOnFailureListener {
+            // Handle any errors
+        }
+    }
 }
