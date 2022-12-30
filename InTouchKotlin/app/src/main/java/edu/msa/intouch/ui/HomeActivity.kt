@@ -19,8 +19,11 @@ import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.adapter.ConnectionAdapter
 import edu.msa.intouch.databinding.ActivityHomeBinding
+import edu.msa.intouch.model.Client
 import edu.msa.intouch.model.ConnectionStatus
 import edu.msa.intouch.service.BackendApiService
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 class HomeActivity : AppCompatActivity() {
 
@@ -97,11 +100,25 @@ class HomeActivity : AppCompatActivity() {
                 binding.viewForNoConnections.isVisible = false
                 binding.recyclerView.isVisible = true
 
-                connectionsList.forEach {
-                    //binding.textId.text = it.receiverId.firstName
-                    val adapter = ConnectionAdapter(connectionsList)
-                    recyclerView.adapter = adapter
-                }
+                val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+                val adapter = ConnectionAdapter(connectionsList)
+                recyclerView.adapter = adapter
+
+                adapter.setOnItemClickListener(object : ConnectionAdapter.onItemClickListener {
+                    override fun onItemClick(position: Int) {
+                        val sharedConnection =
+                            Intent(this@HomeActivity, SharedConnectionActivity::class.java)
+                        val selectedUser: Client =
+                            if (connectionsList.get(position).receiverId.firebaseId == currentUser) {
+                                connectionsList.get(position).senderId
+                            } else {
+                                connectionsList.get(position).receiverId
+                            }
+                        val json = Json.encodeToString(selectedUser)
+                        sharedConnection.putExtra("selectedUser", json)
+                        startActivity(sharedConnection)
+                    }
+                })
             } else {
 
                 binding.progressBar.isVisible = false

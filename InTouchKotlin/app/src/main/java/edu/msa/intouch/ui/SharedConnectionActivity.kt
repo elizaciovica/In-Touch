@@ -6,6 +6,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivitySharedConnectionBinding
+import edu.msa.intouch.model.Client
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 
 class SharedConnectionActivity : AppCompatActivity() {
@@ -18,7 +21,7 @@ class SharedConnectionActivity : AppCompatActivity() {
         setUserDetails()
     }
 
-    private fun setBinding(){
+    private fun setBinding() {
         binding = ActivitySharedConnectionBinding.inflate(layoutInflater);
         setContentView(binding.root);
     }
@@ -26,15 +29,16 @@ class SharedConnectionActivity : AppCompatActivity() {
     private fun initializeButtons() {
         binding.chatBtn.setOnClickListener {
             val chatIntent = Intent(this, ChatActivity::class.java)
-            chatIntent.putExtra("userId", intent.extras?.getString("userId"))
+            val selectedUser = intent.getSerializableExtra("selectedUser") as String
+            chatIntent.putExtra("selectedUser", selectedUser)
             startActivity(chatIntent)
         }
     }
 
-    private fun setUserDetails(){
-        val usernameTextView : TextView = findViewById(R.id.username)
-        val clientList = ConnectionListActivity().clientList
-        val selectedUser = clientList.find{it.firebaseId == (intent.extras?.getString("userId"))}
-        usernameTextView.text = selectedUser?.firstName + " " + selectedUser?.lastName
+    private fun setUserDetails() {
+        val usernameTextView: TextView = findViewById(R.id.username)
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
+        usernameTextView.text = selectedUser!!.firstName + " " + selectedUser!!.lastName
     }
 }
