@@ -1,4 +1,4 @@
-package edu.msa.intouch.ui.adapter
+package edu.msa.intouch.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -43,7 +43,7 @@ class ChatAdapter(private val context: Context, private val chatList: ArrayList<
     }
 
     override fun getItemViewType(position: Int): Int {
-        if(chatList[position].sender == ChatActivity().currentUser.firebaseId)
+        if(chatList[position].sender == ChatActivity().currentUser!!.uid)
         {
             return MESSAGE_TYPE_RIGHT
         }
