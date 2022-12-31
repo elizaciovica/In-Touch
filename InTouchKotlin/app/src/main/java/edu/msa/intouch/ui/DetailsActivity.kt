@@ -1,13 +1,15 @@
 package edu.msa.intouch.ui
 
+import android.Manifest.permission.*
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.widget.ImageButton
 import android.widget.Toast
-import androidx.activity.result.ActivityResultCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -18,14 +20,14 @@ import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.databinding.ActivityDetailsBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.service.BackendApiService
-import java.net.URI
 
 class DetailsActivity : AppCompatActivity() {
 
     private val backendApiService = BackendApiService()
     private lateinit var profilePicture: ImageButton
-    private lateinit var uri: Uri
+    private lateinit var selectedImageUri: Uri
     private var storageRef = Firebase.storage
+    var SELECT_PICTURE = 200
 
     private lateinit var binding: ActivityDetailsBinding
 
@@ -33,6 +35,24 @@ class DetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         initializeButtons()
+
+        val storagePermissionRequest = registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions()
+        ) { permissions ->
+            when {
+                permissions.getOrDefault(READ_EXTERNAL_STORAGE, false) -> {}
+                permissions.getOrDefault(WRITE_EXTERNAL_STORAGE, false) -> {}
+                permissions.getOrDefault(MANAGE_EXTERNAL_STORAGE, false) -> {}
+            }
+        }
+        storagePermissionRequest.launch(
+            arrayOf(
+                READ_EXTERNAL_STORAGE,
+                WRITE_EXTERNAL_STORAGE,
+                MANAGE_EXTERNAL_STORAGE
+            )
+        )
+
         uploadImage()
     }
 
@@ -102,30 +122,27 @@ class DetailsActivity : AppCompatActivity() {
         profilePicture = binding.homeIcon
         storageRef = FirebaseStorage.getInstance()
 
-        val galleryImage = registerForActivityResult(
-            ActivityResultContracts.GetContent(),
-            ActivityResultCallback {
-                profilePicture.setImageURI(it)
-                uri = it!!
-            }
-        )
         binding.uploadImageButton.setOnClickListener() {
-            galleryImage.launch("image/+")
+            val i = Intent()
+            i.type = "image/*"
+            i.action = Intent.ACTION_GET_CONTENT
+            startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
         }
 
         binding.upload.setOnClickListener {
             storageRef.getReference("images").child(userId)
-                .putFile(uri)
+                .putFile(selectedImageUri)
                 .addOnSuccessListener {
-
                     val mapImage = mapOf(
                         "url" to it.toString()
                     )
 
-                    val databaseReference = FirebaseDatabase.getInstance().getReference("userImages")
+                    val databaseReference =
+                        FirebaseDatabase.getInstance().getReference("userImages")
                     databaseReference.child(userId).setValue(mapImage)
                         .addOnSuccessListener {
-                            Toast.makeText(this, "Image successfully uploaded", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "Image successfully uploaded", Toast.LENGTH_SHORT)
+                                .show()
                         }
                         .addOnFailureListener() { error ->
                             Toast.makeText(this, it.toString(), Toast.LENGTH_SHORT).show()
@@ -134,5 +151,32 @@ class DetailsActivity : AppCompatActivity() {
                 }
         }
 
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK) {
+            if (requestCode == SELECT_PICTURE) {
+                selectedImageUri = data!!.getData()!!
+                if (null != selectedImageUri) {
+                    // update the preview image in the layout
+                    var bitmap = MediaStore.Images.Media.getBitmap(
+                        getApplicationContext().getContentResolver(), Uri.parse(
+                            selectedImageUri.toString()
+                        )
+                    )
+                    profilePicture.background = BitmapDrawable(
+                        resources,
+                        Bitmap.createScaledBitmap(
+                            bitmap,
+                            profilePicture.width,
+                            profilePicture.height,
+                            false
+                        )
+                    )
+                }
+            }
+        }
     }
 }
