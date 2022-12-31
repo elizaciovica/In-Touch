@@ -1,6 +1,9 @@
 package edu.msa.intouch.adapter
 
 import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,6 +12,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.service.BackendApiService
 
@@ -44,8 +49,10 @@ class RequestAdapter(
 
         if (currentUser.equals(dataSet[position].receiverId.firebaseId)) {
             viewHolder.nameTextView.text = dataSet[position].senderId.firstName
+            getProfilePicture(dataSet[position].senderId.firebaseId, viewHolder)
         } else {
             viewHolder.nameTextView.text = dataSet[position].receiverId.firstName
+            getProfilePicture(dataSet[position].receiverId.firebaseId, viewHolder)
         }
 
         viewHolder.updateButton.setOnClickListener() {
@@ -60,6 +67,25 @@ class RequestAdapter(
                 activity,
                 dataSet[position].senderId.firebaseId
             )
+        }
+    }
+
+    private fun getProfilePicture(userId : String, viewHolder: RequestAdapter.ViewHolder) {
+        var storageRef = Firebase.storage
+        var islandRef = storageRef.reference.child("images/$userId")
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            viewHolder.imageView.background = BitmapDrawable(
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    viewHolder.imageView.width,
+                    viewHolder.imageView.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
         }
     }
 
