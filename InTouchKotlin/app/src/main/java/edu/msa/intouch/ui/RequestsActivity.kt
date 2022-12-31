@@ -97,7 +97,7 @@ class RequestsActivity : AppCompatActivity() {
     private fun getProfilePicture() {
         val userId = FirebaseAuth.getInstance().currentUser!!.uid
         var islandRef = storageRef.reference.child("images/$userId")
-        val ONE_MEGABYTE: Long = 1024 * 1024
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
         islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
             val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
             binding.homeIcon.background = BitmapDrawable(
