@@ -1,0 +1,139 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/homebackground"
+    android:orientation="vertical"
+    tools:context=".ui.RegisterActivity">
+
+    <ImageButton
+        android:id="@+id/homeIcon"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="285dp"
+        android:background="@drawable/roundcorner"
+        android:gravity="center_horizontal"
+        android:paddingTop="10dp" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="30dp"
+        android:gravity="center_horizontal"
+        android:text="Your details"
+        android:textColor="#570924"
+        android:textSize="40dp"
+        android:textStyle="bold|italic" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:width="10dp"
+            android:layout_marginLeft="30dp"
+            android:textColor="#570924"
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/email"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textColor="#974763" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="95dp"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:layout_marginLeft="30dp"
+            android:textColor="#570924"
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/username"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:text="Username"
+            android:textColor="#974763" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="110dp"
+            android:layout_height="wrap_content"
+            android:text="First Name"
+            android:layout_marginLeft="30dp"
+            android:textColor="#570924"
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/firstname"
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:text="First Name"
+            android:textColor="#974763" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="30dp">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:layout_width="130dp"
+            android:layout_height="wrap_content"
+            android:text="Second Name"
+            android:layout_marginLeft="30dp"
+            android:textColor="#570924"
+            android:textSize="20dp"
+            android:layout_marginRight="20dp"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/secondname"
+            android:layout_width="235dp"
+            android:layout_height="wrap_content"
+            android:text="Second Name"
+            android:textColor="#974763" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/updateProfileButton"
+        android:layout_width="210dp"
+        android:layout_height="60dp"
+        android:text="Update Profile"
+        android:textColor="#570924"
+        android:backgroundTint="#D5D5CB"
+        android:textSize="18dp"
+        android:textFontWeight="300"
+        android:layout_marginHorizontal="100dp"
+        android:fontFamily="@font/inter"
+        android:textStyle="italic"
+        style="?attr/borderlessButtonStyle"
+        />
+</LinearLayout>

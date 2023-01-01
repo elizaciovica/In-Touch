@@ -47,9 +47,9 @@ public class ClientController {
                             .collect(Collectors.toList());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateClients(@PathVariable final String firebaseId, @RequestBody Client client) {
-        clientService.update(firebaseId, client);
+    @PutMapping("/update")
+    public ResponseEntity<?> updateClients(@RequestBody Client client) {
+        clientService.update(client);
         return ResponseEntity.ok(HttpStatus.OK);
     }
 }

@@ -9,23 +9,16 @@ import android.view.Menu
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.isVisible
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
-import edu.msa.intouch.R
-import edu.msa.intouch.adapter.RequestAdapter
-import edu.msa.intouch.databinding.ActivityRequestsBinding
-import edu.msa.intouch.model.ConnectionStatus
+import edu.msa.intouch.databinding.ActivityProfileBinding
 import edu.msa.intouch.service.BackendApiService
 
-class RequestsActivity : AppCompatActivity() {
+class ProfileActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityRequestsBinding
+    private lateinit var binding: ActivityProfileBinding
     private var storageRef = Firebase.storage
-
     private val backendApiService = BackendApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,8 +26,14 @@ class RequestsActivity : AppCompatActivity() {
         setBinding()
         getMenu()
         getProfilePicture()
-        getRequestConnections()
+        initializeButtons()
+        getClientDetails()
+    }
 
+    private fun initializeButtons() {
+        binding.updateProfileButton.setOnClickListener() {
+            startActivity(Intent(this, UpdateProfileActivity::class.java))
+        }
     }
 
     private fun getMenu() {
@@ -67,35 +66,8 @@ class RequestsActivity : AppCompatActivity() {
     }
 
     private fun setBinding() {
-        binding = ActivityRequestsBinding.inflate(layoutInflater)
+        binding = ActivityProfileBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
-
-    private fun getRequestConnections() {
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        backendApiService.getAllConnectionRequestsByStatus(this, ConnectionStatus.PENDING.status)
-        backendApiService.observeRequestsLiveData().observe(
-            this
-        ) { connectionsList ->
-            if (connectionsList.isNotEmpty()) {
-
-                binding.progressBar.isVisible = false
-                binding.viewForNoConnections.isVisible = false
-                binding.recyclerView.isVisible = true
-
-                connectionsList.forEach {
-                    val adapter = RequestAdapter(connectionsList, this)
-                    recyclerView.adapter = adapter
-                }
-            } else {
-
-                binding.progressBar.isVisible = false
-                binding.viewForNoConnections.isVisible = true
-                binding.recyclerView.isVisible = false
-            }
-        }
     }
 
     private fun getProfilePicture() {
@@ -116,5 +88,9 @@ class RequestsActivity : AppCompatActivity() {
         }.addOnFailureListener {
             // Handle any errors
         }
+    }
+
+    private fun getClientDetails() {
+        backendApiService.getClientById(this)
     }
 }
