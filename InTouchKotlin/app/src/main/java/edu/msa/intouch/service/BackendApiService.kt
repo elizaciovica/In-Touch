@@ -10,12 +10,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import com.google.android.material.textview.MaterialTextView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.Gson
+import edu.msa.intouch.R
 import edu.msa.intouch.model.Client
-import edu.msa.intouch.ui.DetailsActivity
-import edu.msa.intouch.ui.HomeActivity
-import edu.msa.intouch.ui.RequestsActivity
+import edu.msa.intouch.ui.*
 import edu.msa.intouch.util.BackendApiCallTypeEnum
 import edu.msa.intouch.util.BackendApiCallTypeEnum.*
 import edu.msa.intouch.util.HttpMethodTypeEnum
@@ -25,10 +25,11 @@ import java.io.IOException
 
 class BackendApiService : ViewModel() {
 
-    private val BACKEND_API_URL = "https://dmtj8wgjla.loclx.io"
+    private val BACKEND_API_URL = "https://jboxjojkkf.loclx.io"
     private val JSON = MediaType.parse("application/json; charset=utf-8")
     private var connectionLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
     private var requestsLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
+    private var clientLiveData = MutableLiveData<Client>()
 
     fun getClientById(activity: Activity) {
         val firebaseId = FirebaseAuth.getInstance().currentUser?.uid
@@ -42,6 +43,13 @@ class BackendApiService : ViewModel() {
         val requestBody = RequestBody.create(JSON, Gson().toJson(client))
 
         callBackendEndpoint(activity, endpointUrl, requestBody, POST, CREATE_CLIENT)
+    }
+
+    fun updateClient(activity: Activity, client: Client) {
+        val endpointUrl = "/users/update"
+        val requestBody = RequestBody.create(JSON, Gson().toJson(client))
+
+        callBackendEndpoint(activity, endpointUrl, requestBody, PUT, UPDATE_CLIENT)
     }
 
     fun createConnection(activity: Activity, receiverEmail: String) {
@@ -102,6 +110,7 @@ class BackendApiService : ViewModel() {
                         when (backendApiCallType) {
                             CREATE_CLIENT -> createClientCallback(activity)
                             GET_CLIENT_BY_ID -> getClientByIdCallback(activity)
+                            UPDATE_CLIENT -> updateClientCallback(activity)
                             CREATE_CONNECTION -> createConnectionCallback(activity)
                             GET_ALL_CONNECTIONS_BY_STATUS -> getAllConnectionsCallback(activity)
                             GET_ALL_CONNECTION_REQUESTS_BY_STATUS ->
@@ -123,18 +132,53 @@ class BackendApiService : ViewModel() {
         }
 
         override fun onResponse(call: Call, response: Response) {
-            if (response.isSuccessful) {
-                println("User has already the profile complete.")
-                startActivityActionFromLogin(activity)
-            } else if (response.code() == 404) {
-                println("User not found in PostgreSQL. Must complete his profile first.")
-                startDetailsActivity(activity)
-            } else {
-                println("API Response is not successful")
-                showErrorMessage(activity)
+            if (activity is LoginActivity) {
+                if (response.isSuccessful) {
+                    println("User has already the profile complete.")
+                    startActivityActionFromLogin(activity)
+                } else if (response.code() == 404) {
+                    println("User not found in PostgreSQL. Must complete his profile first.")
+                    startDetailsActivity(activity)
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
             }
-            response.close()
+
+            if (activity is ProfileActivity) {
+                if (response.isSuccessful) {
+                    val mapper = jacksonObjectMapper()
+                    val client: Client =
+                        mapper.readValue(response.body()?.string().toString())
+                    activity.findViewById<MaterialTextView>(R.id.email).text = client.email
+                    activity.findViewById<MaterialTextView>(R.id.username).text = client.username
+                    activity.findViewById<MaterialTextView>(R.id.firstname).text = client.firstName
+                    activity.findViewById<MaterialTextView>(R.id.secondname).text = client.lastName
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
+            }
+
+            if (activity is UpdateProfileActivity) {
+                if (response.isSuccessful) {
+                    val mapper = jacksonObjectMapper()
+                    val client: Client =
+                        mapper.readValue(response.body()?.string().toString())
+                    clientLiveData.postValue(client)
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
+            }
         }
+    }
+
+    fun observeClientLiveData(): LiveData<Client> {
+        return clientLiveData
     }
 
     private fun createClientCallback(activity: Activity) = object : Callback {
@@ -146,6 +190,29 @@ class BackendApiService : ViewModel() {
             if (response.isSuccessful) {
                 println("Proceeding to start application.")
                 startActivityAction(activity)
+            } else {
+                println("API Response is not successful")
+                showErrorMessage(activity)
+            }
+            response.close()
+        }
+    }
+
+    private fun updateClientCallback(activity: Activity) = object : Callback {
+        override fun onFailure(call: Call, e: IOException) {
+            println("API call failure.")
+        }
+
+        override fun onResponse(call: Call, response: Response) {
+            if (response.isSuccessful) {
+                println("Profile updated successfully")
+                Handler(Looper.getMainLooper()).post {
+                    Toast.makeText(
+                        activity,
+                        "Profile updated successfully",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
             } else {
                 println("API Response is not successful")
                 showErrorMessage(activity)
@@ -182,12 +249,10 @@ class BackendApiService : ViewModel() {
                 if (response.isSuccessful) {
                     println("API Response successful")
                     val mapper = jacksonObjectMapper()
-                    var connectionList: List<edu.msa.intouch.model.Connection> =
+                    val connectionList: List<edu.msa.intouch.model.Connection> =
                         mapper.readValue(response.body()?.string().toString())
                     //connectionList.forEach { connectionLiveData.postValue(it.receiverId.firstName) }
                     connectionLiveData.postValue(connectionList)
-
-
                 } else {
                     println("API Response is not successful")
                     showErrorMessage(activity)
@@ -214,7 +279,6 @@ class BackendApiService : ViewModel() {
                         mapper.readValue(response.body()?.string().toString())
                     //connectionList.forEach { connectionLiveData.postValue(it.receiverId.firstName) }
                     requestsLiveData.postValue(requestsList)
-
                 } else {
                     println("API Response is not successful")
                     showErrorMessage(activity)

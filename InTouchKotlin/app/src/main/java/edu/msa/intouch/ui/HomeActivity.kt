@@ -28,11 +28,7 @@ import kotlinx.serialization.json.Json
 class HomeActivity : AppCompatActivity() {
 
     private var storageRef = Firebase.storage
-    private lateinit var profilePicture: ImageButton
-    private lateinit var uri: Uri
-
     private lateinit var binding: ActivityHomeBinding
-
     private val backendApiService = BackendApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,13 +49,17 @@ class HomeActivity : AppCompatActivity() {
             button
         )
 
-        //showPopUp.menu.add(Menu.NONE, 0, 0, "Change profile picture")
+        showPopUp.menu.add(Menu.NONE, 0, 0, "See profile details")
         showPopUp.menu.add(Menu.NONE, 1, 1, "Log Out")
 
         showPopUp.setOnMenuItemClickListener { menuItem ->
             val id = menuItem.itemId
             if (id == 1) {
                 startActivity(Intent(this, LoginActivity::class.java))
+                finish()
+            }
+            if (id == 0) {
+                startActivity(Intent(this, ProfileActivity::class.java))
                 finish()
             }
             false
