@@ -29,8 +29,8 @@ public class ClientService {
         return clientRepository.findAll();
     }
 
-    public void update(final String firebaseId, final Client client) {
-        final Optional<Client> updatedClientOptional = get(firebaseId);
+    public void update(final Client client) {
+        final Optional<Client> updatedClientOptional = get(client.getFirebaseId());
         if (updatedClientOptional.isEmpty()) {
             throw new IllegalArgumentException("User to be updated not found.");
         }
