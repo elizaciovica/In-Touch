@@ -1,6 +1,7 @@
 package edu.msa.intouch.ui
 
 import android.Manifest.permission.*
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -12,11 +13,13 @@ import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityDetailsBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.service.BackendApiService
@@ -34,8 +37,12 @@ class DetailsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
-        initializeButtons()
+        givePermissions()
+        setNavigation(this)
+        uploadImage()
+    }
 
+    private fun givePermissions() {
         val storagePermissionRequest = registerForActivityResult(
             ActivityResultContracts.RequestMultiplePermissions()
         ) { permissions ->
@@ -52,19 +59,25 @@ class DetailsActivity : AppCompatActivity() {
                 MANAGE_EXTERNAL_STORAGE
             )
         )
+    }
 
-        uploadImage()
+    private fun setNavigation(activity: Activity) {
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemSelectedListener { item ->
+            if(item.itemId == R.id.page_1) {
+                activity.startActivity(Intent(activity, HomeActivity::class.java))
+                true
+            }
+            if(item.itemId == R.id.page_2) {
+                activity.startActivity(Intent(activity, ConnectionActivity::class.java))
+                true
+            }
+            false
+        }
     }
 
     private fun setBinding() {
         binding = ActivityDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
-    }
-
-    private fun initializeButtons() {
-        binding.setProfileButton.setOnClickListener {
-            createProfileAction()
-        }
     }
 
     private fun createProfileAction() {
@@ -129,7 +142,7 @@ class DetailsActivity : AppCompatActivity() {
             startActivityForResult(Intent.createChooser(i, "Select Picture"), SELECT_PICTURE);
         }
 
-        binding.upload.setOnClickListener {
+        binding.setProfileButton.setOnClickListener {
             storageRef.getReference("images").child(userId)
                 .putFile(selectedImageUri)
                 .addOnSuccessListener {
@@ -149,6 +162,7 @@ class DetailsActivity : AppCompatActivity() {
                         }
 
                 }
+            createProfileAction()
         }
 
     }

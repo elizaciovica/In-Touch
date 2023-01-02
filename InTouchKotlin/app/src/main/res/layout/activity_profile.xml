@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,6 +19,7 @@
         android:paddingTop="10dp" />
 
     <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/details"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="100dp"
@@ -27,13 +28,16 @@
         android:text="Your details"
         android:textColor="#570924"
         android:textSize="40dp"
-        android:textStyle="bold|italic" />
+        android:textStyle="bold|italic"
+        android:layout_below="@id/homeIcon"/>
 
     <LinearLayout
+        android:id="@+id/first_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/details">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="50dp"
@@ -54,10 +58,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/second_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/first_layout">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="95dp"
@@ -77,10 +83,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/third_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/second_layout">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="110dp"
@@ -100,10 +108,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/last_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="30dp">
+        android:layout_marginBottom="30dp"
+        android:layout_below="@id/third_layout">
 
         <com.google.android.material.textview.MaterialTextView
             android:layout_width="130dp"
@@ -135,5 +145,13 @@
         android:fontFamily="@font/inter"
         android:textStyle="italic"
         style="?attr/borderlessButtonStyle"
-        />
-</LinearLayout>
+        android:layout_below="@id/last_layout"/>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_bar"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

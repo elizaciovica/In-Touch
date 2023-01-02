@@ -1,4 +1,4 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -19,28 +19,34 @@
         android:paddingTop="10dp" />
 
     <TextView
+        android:id="@+id/text"
         android:layout_width="200dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="115dp"
+        android:layout_marginHorizontal="110dp"
         android:layout_marginTop="70dp"
         android:fontFamily="@font/inter"
         android:text="Set your details"
         android:textColor="#974763"
         android:textFontWeight="600"
-        android:textSize="25sp" />
+        android:textSize="25sp"
+        android:layout_below="@id/homeIcon"
+        />
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/first_text"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
+        android:layout_marginLeft="60dp"
         android:hint="Username"
         android:textColorHint="#974763"
         app:boxBackgroundColor="#EEBDBA"
         app:hintTextColor="#974763"
         app:startIconDrawable="@drawable/ic_baseline_person_24"
-        app:startIconTint="#570924">
+        app:startIconTint="#570924"
+        android:layout_below="@id/text">
 
     <com.google.android.material.textfield.TextInputEditText
         android:layout_marginTop="30dp"
@@ -51,17 +57,20 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/second_text"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
+        android:layout_marginLeft="60dp"
         android:hint="First Name"
         android:textColorHint="#974763"
         app:boxBackgroundColor="#EEBDBA"
         app:hintTextColor="#974763"
         app:startIconDrawable="@drawable/ic_baseline_person_24"
-        app:startIconTint="#570924">
+        app:startIconTint="#570924"
+        android:layout_below="@id/first_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_marginTop="30dp"
@@ -72,17 +81,20 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/third_text"
         style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
         android:layout_width="310dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="15dp"
+        android:layout_marginLeft="60dp"
         android:hint="Last Name"
         android:textColorHint="#974763"
         app:boxBackgroundColor="#EEBDBA"
         app:hintTextColor="#974763"
         app:startIconDrawable="@drawable/ic_baseline_person_24"
-        app:startIconTint="#570924">
+        app:startIconTint="#570924"
+        android:layout_below="@id/second_text">
 
         <com.google.android.material.textfield.TextInputEditText
             android:layout_marginTop="30dp"
@@ -96,24 +108,11 @@
         android:id="@+id/uploadImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="30dp"
+        android:layout_marginBottom="20dp"
         android:layout_marginHorizontal="100dp"
-        android:text="UPLOAD PROFILE PICTURE"/>
-
-    <Button
-        android:id="@+id/upload"
-        android:layout_width="210dp"
-        android:layout_height="60dp"
-        android:text="Upload"
-        android:textColor="#570924"
-        android:backgroundTint="#D5D5CB"
-        android:textSize="18dp"
-        android:textFontWeight="300"
-        android:layout_marginHorizontal="100dp"
-        android:fontFamily="@font/inter"
-        android:textStyle="italic"
-        style="?attr/borderlessButtonStyle"
-        />
+        android:layout_marginTop="10dp"
+        android:text="UPLOAD PROFILE PICTURE"
+        android:layout_below="@id/third_text"/>
 
     <Button
         android:id="@+id/setProfileButton"
@@ -128,6 +127,13 @@
         android:fontFamily="@font/inter"
         android:textStyle="italic"
         style="?attr/borderlessButtonStyle"
-        />
+        android:layout_below="@id/uploadImageButton"/>
 
-</LinearLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_bar"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>

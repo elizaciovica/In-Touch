@@ -16,7 +16,7 @@
         android:textStyle="bold|italic"
         android:textColor="#570924"
         android:textSize="40dp"
-        android:layout_marginTop="310dp"/>
+        android:layout_marginTop="350dp"/>
 
     <com.google.android.material.textview.MaterialTextView
         android:layout_width="match_parent"

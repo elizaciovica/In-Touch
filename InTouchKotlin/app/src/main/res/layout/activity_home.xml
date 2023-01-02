@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/homebackground"
     android:orientation="vertical"
-    tools:context=".ui.RegisterActivity">
+    tools:context=".ui.RegisterActivity"
+    android:id="@+id/relative">
 
     <ImageButton
         android:id="@+id/homeIcon"
@@ -20,12 +21,14 @@
         android:paddingTop="10dp"/>
 
     <LinearLayout
+        android:id="@+id/lay"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="8dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="60dp">
+        android:paddingTop="60dp"
+        android:layout_below="@id/homeIcon">
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/connection"
@@ -59,11 +62,12 @@
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="400dp"
         android:layout_marginLeft="8dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="8dp"
-        android:backgroundTint="#DDB0AD">
+        android:backgroundTint="#DDB0AD"
+        android:layout_below="@id/lay">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -122,21 +126,11 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <!--    <com.google.android.material.button.MaterialButton-->
-    <!--        android:id="@+id/buttonExample"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginHorizontal="50dp"-->
-    <!--        android:layout_marginTop="50dp"-->
-    <!--        android:gravity="center_horizontal"-->
-    <!--        android:text="Button frumos cu fainosag" />-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_bar"
+        android:layout_alignParentBottom="true"/>
 
-    <!--    <TextView-->
-    <!--        android:id="@+id/payload"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginHorizontal="50dp"-->
-    <!--        android:gravity="center_horizontal"-->
-    <!--        android:text="Text initial" />-->
-
-</LinearLayout>
+</RelativeLayout>

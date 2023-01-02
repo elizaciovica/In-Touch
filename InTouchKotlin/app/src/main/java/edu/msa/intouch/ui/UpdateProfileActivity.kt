@@ -1,6 +1,7 @@
 package edu.msa.intouch.ui
 
 import android.Manifest.permission.*
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -15,11 +16,13 @@ import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
+import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityUpdateProfileBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.service.BackendApiService
@@ -67,7 +70,7 @@ class UpdateProfileActivity : AppCompatActivity() {
         getProfilePicture()
         getMenu()
         uploadImage()
-
+        setNavigation(this)
     }
 
     private fun getProfilePicture() {
@@ -236,6 +239,20 @@ class UpdateProfileActivity : AppCompatActivity() {
                     )
                 }
             }
+        }
+    }
+
+    private fun setNavigation(activity: Activity) {
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemSelectedListener { item ->
+            if(item.itemId == R.id.page_1) {
+                activity.startActivity(Intent(activity, HomeActivity::class.java))
+                true
+            }
+            if(item.itemId == R.id.page_2) {
+                activity.startActivity(Intent(activity, ConnectionActivity::class.java))
+                true
+            }
+            false
         }
     }
 }
