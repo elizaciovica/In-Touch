@@ -1,5 +1,6 @@
 package edu.msa.intouch.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -9,9 +10,11 @@ import android.view.Menu
 import android.widget.ImageButton
 import android.widget.PopupMenu
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityProfileBinding
 import edu.msa.intouch.service.BackendApiService
 
@@ -28,6 +31,7 @@ class ProfileActivity : AppCompatActivity() {
         getProfilePicture()
         initializeButtons()
         getClientDetails()
+        setNavigation(this)
     }
 
     private fun initializeButtons() {
@@ -92,5 +96,19 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun getClientDetails() {
         backendApiService.getClientById(this)
+    }
+
+    private fun setNavigation(activity: Activity) {
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemSelectedListener { item ->
+            if(item.itemId == R.id.page_1) {
+                activity.startActivity(Intent(activity, HomeActivity::class.java))
+                true
+            }
+            if(item.itemId == R.id.page_2) {
+                activity.startActivity(Intent(activity, ConnectionActivity::class.java))
+                true
+            }
+            false
+        }
     }
 }
