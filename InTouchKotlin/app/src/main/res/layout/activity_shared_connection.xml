@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,6 +9,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:id="@+id/userDetails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -29,15 +30,133 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/chatBtn"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:text="Chat"
-        android:layout_marginTop="40dp"
-        android:backgroundTint="#DDB0AD"
-        android:textSize="15sp"
-        android:textColor="#570924"
-        />
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:rowCount="3"
+        app:columnCount="1"
+        android:layout_marginTop="160dp"
+        android:layout_marginBottom="100dp">
 
-</LinearLayout>
+        <androidx.cardview.widget.CardView
+            android:id="@+id/chatBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_gravity="fill"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            android:layout_margin="8dp"
+            app:layout_row="0"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:backgroundTint="#DDB0AD">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_gravity="center_vertical|center_horizontal">
+                
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_baseline_chat_24"
+                    android:backgroundTint="#570924" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CHAT"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"/>
+                
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/notesBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_gravity="fill"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            android:layout_margin="8dp"
+            app:layout_row="1"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:backgroundTint="#DDB0AD">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_gravity="center_vertical|center_horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_baseline_sticky_note_2_24"
+                    android:backgroundTint="#570924" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOTES"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/calendarBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_gravity="fill"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp"
+            android:layout_margin="8dp"
+            app:layout_row="2"
+            app:layout_column="0"
+            app:layout_columnWeight="1"
+            app:layout_rowWeight="1"
+            android:backgroundTint="#DDB0AD">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_gravity="center_vertical|center_horizontal">
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/ic_baseline_calendar_month_24"
+                    android:backgroundTint="#570924" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="CALENDAR"
+                    android:textSize="25sp"
+                    android:textColor="@color/black"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+
+    </androidx.gridlayout.widget.GridLayout>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_bar"
+        android:layout_alignParentBottom="true"/>
+
+</RelativeLayout>
