@@ -27,8 +27,11 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityViewNotesBinding
+import edu.msa.intouch.model.Client
 import edu.msa.intouch.model.Note
 import edu.msa.intouch.service.BackendApiService
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 import kotlin.random.Random
 
 class ViewNotesActivity : AppCompatActivity() {
@@ -121,14 +124,22 @@ class ViewNotesActivity : AppCompatActivity() {
 
     private fun initializeButtons() {
         binding.floatingButton.setOnClickListener {
-            this.startActivity(Intent(this, CreateNotesActivity::class.java))
+            val createIntent = Intent(this, CreateNotesActivity::class.java)
+            val selectedUser = intent.getSerializableExtra("selectedUser") as String
+            createIntent.putExtra("selectedUser", selectedUser)
+            startActivity(createIntent)
         }
     }
 
     //todo put extra from shared connection activity so we can get the guid of the connection
     private fun getNotes() {
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
         val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
-        val query = firebaseFirestore.collection("notes").document(currentUser).collection("MyNotes")
+
+        val bitEncode = (selectedUser.firebaseId + currentUser).encodeToByteArray()
+        val sumArray = bitEncode.sum()
+        val query = firebaseFirestore.collection("notes").document(sumArray.toString()).collection("MyNotes")
         val allUsersNotes = FirestoreRecyclerOptions.Builder<Note>().setQuery(query, Note::class.java).build()
 
         noteAdapter = NoteFirestoreRecyclerAdapter(allUsersNotes)
@@ -136,6 +147,7 @@ class ViewNotesActivity : AppCompatActivity() {
         binding.recyclerView.layoutManager = staggeredGridLayoutManager
         binding.recyclerView.adapter = noteAdapter
         binding.recyclerView.adapter?.notifyDataSetChanged()
+
     }
 
     private inner class NoteViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
@@ -197,6 +209,9 @@ class ViewNotesActivity : AppCompatActivity() {
         detailsIntent.putExtra("title", note.title)
         detailsIntent.putExtra("content", note.content)
         detailsIntent.putExtra("noteId", docId)
+
+        val selectedUser = intent.getSerializableExtra("selectedUser") as String
+        detailsIntent.putExtra("selectedUser", selectedUser)
         startActivity(detailsIntent)
     }
 
@@ -205,13 +220,22 @@ class ViewNotesActivity : AppCompatActivity() {
         editIntent.putExtra("title", note.title)
         editIntent.putExtra("content", note.content)
         editIntent.putExtra("noteId", docId)
+
+        val selectedUser = intent.getSerializableExtra("selectedUser") as String
+        editIntent.putExtra("selectedUser", selectedUser)
         startActivity(editIntent)
         return false
     }
 
     fun onMenuDeleteItemClick(docId: String) : Boolean {
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
         val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
-        documentReference = firebaseFirestore.collection("notes").document(currentUser).collection("MyNotes").document(docId)
+
+        val bitEncode = (selectedUser.firebaseId + currentUser).encodeToByteArray()
+        val sumArray = bitEncode.sum()
+
+        documentReference = firebaseFirestore.collection("notes").document(sumArray.toString()).collection("MyNotes").document(docId)
         documentReference.delete().addOnSuccessListener {
             Toast.makeText(applicationContext, "The note has been deleted", Toast.LENGTH_LONG)
             .show()

@@ -110,6 +110,9 @@ class NoteDetailsActivity : AppCompatActivity() {
             editIntent.putExtra("title", data.getStringExtra("title"))
             editIntent.putExtra("content", data.getStringExtra("content"))
             editIntent.putExtra("noteId", data.getStringExtra("noteId"))
+
+            val selectedUser = data.getStringExtra("selectedUser") as String
+            editIntent.putExtra("selectedUser", selectedUser)
             startActivity(editIntent)
         }
 
@@ -120,7 +123,10 @@ class NoteDetailsActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                this.startActivity(Intent(this, ViewNotesActivity::class.java))
+                val notesIntent = Intent(this, ViewNotesActivity::class.java)
+                val selectedUser = intent.getSerializableExtra("selectedUser") as String
+                notesIntent.putExtra("selectedUser", selectedUser)
+                startActivity(notesIntent)
                 return true
             }
         }

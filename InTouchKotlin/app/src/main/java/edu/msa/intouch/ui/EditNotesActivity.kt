@@ -19,6 +19,9 @@ import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityEditNotesBinding
 import edu.msa.intouch.databinding.ActivityViewNotesBinding
+import edu.msa.intouch.model.Client
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class EditNotesActivity : AppCompatActivity() {
 
@@ -113,6 +116,11 @@ class EditNotesActivity : AppCompatActivity() {
 
         val firebaseFirestore = FirebaseFirestore.getInstance()
         val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
+
+        val bitEncode = (selectedUser.firebaseId + currentUser).encodeToByteArray()
+        val sumArray = bitEncode.sum()
 
         binding.saveeditbutton.setOnClickListener() {
             val newTitle = binding.edittitleofnote.text.toString()
@@ -122,7 +130,7 @@ class EditNotesActivity : AppCompatActivity() {
                 Toast.makeText(applicationContext, "Both fields are required", Toast.LENGTH_LONG)
                     .show()
             } else {
-                val documentReference = firebaseFirestore.collection("notes").document(currentUser)
+                val documentReference = firebaseFirestore.collection("notes").document(sumArray.toString())
                     .collection("MyNotes").document(
                     data.getStringExtra("noteId")!!
                 )
@@ -137,7 +145,12 @@ class EditNotesActivity : AppCompatActivity() {
                         Toast.LENGTH_LONG
                     )
                         .show()
-                    this.startActivity(Intent(this, ViewNotesActivity::class.java))
+
+                    val notesIntent = Intent(this, ViewNotesActivity::class.java)
+                    val selectedUser = intent.getSerializableExtra("selectedUser") as String
+                    notesIntent.putExtra("selectedUser", selectedUser)
+                    startActivity(notesIntent)
+
                 }.addOnFailureListener {
                     Toast.makeText(applicationContext, "Failed to update note", Toast.LENGTH_LONG)
                         .show()
@@ -149,7 +162,10 @@ class EditNotesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                this.startActivity(Intent(this, ViewNotesActivity::class.java))
+                val notesIntent = Intent(this, ViewNotesActivity::class.java)
+                val selectedUser = intent.getSerializableExtra("selectedUser") as String
+                notesIntent.putExtra("selectedUser", selectedUser)
+                startActivity(notesIntent)
                 return true
             }
         }
