@@ -19,6 +19,9 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityCreateNotesBinding
+import edu.msa.intouch.model.Client
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.json.Json
 
 class CreateNotesActivity : AppCompatActivity() {
 
@@ -108,16 +111,21 @@ class CreateNotesActivity : AppCompatActivity() {
 
     private fun createNotes() {
         val currentUser = FirebaseAuth.getInstance().currentUser!!.uid
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
 
         binding.savebutton.setOnClickListener() {
             var title = binding.createtitleofnote.text.toString()
             var content = binding.createcontentofnote.text.toString()
 
+            val bitEncode = (selectedUser.firebaseId + currentUser).encodeToByteArray()
+            val sumArray = bitEncode.sum()
+
             if (title.isEmpty() || content.isEmpty()) {
                 Toast.makeText(applicationContext, "Both fields are required", Toast.LENGTH_LONG)
                     .show()
             } else {
-                val documentReference = firebaseFirestore.collection("notes").document(currentUser).collection("MyNotes").document()
+                val documentReference = firebaseFirestore.collection("notes").document(sumArray.toString()).collection("MyNotes").document()
 
                 val note = HashMap<String, String>()
                 note["title"] = title
@@ -126,7 +134,12 @@ class CreateNotesActivity : AppCompatActivity() {
                 documentReference.set(note).addOnSuccessListener {
                     Toast.makeText(applicationContext, "Note Created Successfully", Toast.LENGTH_LONG)
                         .show()
-                    this.startActivity(Intent(this, ViewNotesActivity::class.java))
+
+                    val notesIntent = Intent(this, ViewNotesActivity::class.java)
+                    val selectedUser = intent.getSerializableExtra("selectedUser") as String
+                    notesIntent.putExtra("selectedUser", selectedUser)
+                    startActivity(notesIntent)
+
                 } .addOnFailureListener {
                     Toast.makeText(applicationContext, "Failed to create note", Toast.LENGTH_LONG)
                         .show()
@@ -138,7 +151,10 @@ class CreateNotesActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             android.R.id.home -> {
-                this.startActivity(Intent(this, ViewNotesActivity::class.java))
+                val notesIntent = Intent(this, ViewNotesActivity::class.java)
+                val selectedUser = intent.getSerializableExtra("selectedUser") as String
+                notesIntent.putExtra("selectedUser", selectedUser)
+                startActivity(notesIntent)
                 return true
             }
         }
