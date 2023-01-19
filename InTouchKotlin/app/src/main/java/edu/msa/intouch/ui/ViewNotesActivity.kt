@@ -48,10 +48,10 @@ class ViewNotesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setBinding()
         getMenu()
-        getProfilePicture()
         setNavigation()
         initializeButtons()
         getNotes()
+        setUserDetails()
     }
 
     private fun setBinding() {
@@ -85,26 +85,6 @@ class ViewNotesActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             showPopUp.show()
-        }
-    }
-
-    private fun getProfilePicture() {
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        var islandRef = storageRef.reference.child("images/$userId")
-        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
-        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-            binding.homeIcon.background = BitmapDrawable(
-                resources,
-                Bitmap.createScaledBitmap(
-                    bitmap,
-                    binding.homeIcon.width,
-                    binding.homeIcon.height,
-                    false
-                )
-            )
-        }.addOnFailureListener {
-            // Handle any errors
         }
     }
 
@@ -273,5 +253,29 @@ class ViewNotesActivity : AppCompatActivity() {
 
         val randomNumber = colorCode.random()
         return randomNumber
+    }
+
+    private fun setUserDetails(){
+        val usernameTextView : TextView = findViewById(R.id.username)
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
+        usernameTextView.text = selectedUser!!.firstName + " " + selectedUser!!.lastName
+
+        var islandRef = storageRef.reference.child("images/${selectedUser.firebaseId}")
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
+        }
     }
 }

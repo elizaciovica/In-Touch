@@ -35,6 +35,7 @@ class ConnectionActivity : AppCompatActivity() {
         getMenu()
         initializeButtons()
         setNavigation(this)
+        getClientDetails()
     }
 
     private fun getMenu() {
@@ -127,5 +128,9 @@ class ConnectionActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun getClientDetails() {
+        backendApiService.getClientById(this)
     }
 }

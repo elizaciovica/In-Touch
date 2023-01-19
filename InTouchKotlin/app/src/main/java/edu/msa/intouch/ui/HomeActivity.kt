@@ -1,5 +1,6 @@
 package edu.msa.intouch.ui
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Intent
 import android.graphics.Bitmap
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.widget.ImageButton
 import android.widget.PopupMenu
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,6 +26,7 @@ import edu.msa.intouch.databinding.ActivityHomeBinding
 import edu.msa.intouch.model.Client
 import edu.msa.intouch.model.ConnectionStatus
 import edu.msa.intouch.service.BackendApiService
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -33,6 +36,7 @@ class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
     private val backendApiService = BackendApiService()
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setBinding()
@@ -41,7 +45,7 @@ class HomeActivity : AppCompatActivity() {
         getMenu()
         setNavigation(this)
         initializeButtons()
-
+        getClientDetails()
     }
 
     private fun getMenu() {
@@ -165,6 +169,10 @@ class HomeActivity : AppCompatActivity() {
         }.addOnFailureListener {
             // Handle any errors
         }
+    }
+
+    private fun getClientDetails() {
+        backendApiService.getClientById(this)
     }
 
     private fun setNavigation(activity: Activity) {

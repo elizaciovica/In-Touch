@@ -8,16 +8,34 @@
     android:orientation="vertical"
     tools:context=".ui.ConnectionActivity">
 
-    <ImageButton
-        android:id="@+id/homeIcon"
+    <LinearLayout
+        android:id="@+id/l1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="285dp"
-        android:background="@drawable/roundcorner"
-        android:gravity="center_horizontal"
-        android:paddingTop="10dp"/>
+        android:layout_height="130dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/roundcorner"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="User Name"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:textColor="#570924"/>
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/connectionIcon"
@@ -29,7 +47,7 @@
         android:gravity="center_horizontal"
         android:paddingTop="10dp"
         app:cornerRadius="200dp"
-        android:layout_below="@id/homeIcon"/>
+        android:layout_below="@id/l1"/>
 
     <TextView
         android:id="@+id/text"
@@ -75,7 +93,7 @@
         android:layout_height="60dp"
         android:text="Create connection"
         android:textColor="#570924"
-        android:backgroundTint="#D5D5CB"
+        android:backgroundTint="#E5989B"
         android:textSize="18dp"
         android:textFontWeight="300"
         android:layout_marginHorizontal="100dp"

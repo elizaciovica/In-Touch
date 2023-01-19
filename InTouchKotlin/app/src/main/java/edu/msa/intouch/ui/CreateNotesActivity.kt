@@ -10,6 +10,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ImageButton
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -20,6 +21,7 @@ import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityCreateNotesBinding
 import edu.msa.intouch.model.Client
+import edu.msa.intouch.service.BackendApiService
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -28,6 +30,7 @@ class CreateNotesActivity : AppCompatActivity() {
     private lateinit var binding: ActivityCreateNotesBinding
     private var storageRef = Firebase.storage
     private var firebaseFirestore = Firebase.firestore
+    private val backendApiService = BackendApiService()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,9 +39,9 @@ class CreateNotesActivity : AppCompatActivity() {
         delegate.setSupportActionBar(binding.toolbarofcreatenote)
         delegate.supportActionBar!!.setDisplayHomeAsUpEnabled(true)
         getMenu()
-        getProfilePicture()
         setNavigation(this)
         createNotes()
+        setUserDetails()
     }
 
     private fun setBinding() {
@@ -72,26 +75,6 @@ class CreateNotesActivity : AppCompatActivity() {
 
         button.setOnClickListener {
             showPopUp.show()
-        }
-    }
-
-    private fun getProfilePicture() {
-        val userId = FirebaseAuth.getInstance().currentUser!!.uid
-        var islandRef = storageRef.reference.child("images/$userId")
-        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
-        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
-            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
-            binding.homeIcon.background = BitmapDrawable(
-                resources,
-                Bitmap.createScaledBitmap(
-                    bitmap,
-                    binding.homeIcon.width,
-                    binding.homeIcon.height,
-                    false
-                )
-            )
-        }.addOnFailureListener {
-            // Handle any errors
         }
     }
 
@@ -159,5 +142,29 @@ class CreateNotesActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun setUserDetails(){
+        val usernameTextView : TextView = findViewById(R.id.username)
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
+        usernameTextView.text = selectedUser!!.firstName + " " + selectedUser!!.lastName
+
+        var islandRef = storageRef.reference.child("images/${selectedUser.firebaseId}")
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
+        }
     }
 }
