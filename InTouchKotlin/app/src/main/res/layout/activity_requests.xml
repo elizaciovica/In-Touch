@@ -8,16 +8,34 @@
     android:orientation="vertical"
     tools:context=".ui.RegisterActivity">
 
-    <ImageButton
-        android:id="@+id/homeIcon"
+    <LinearLayout
+        android:id="@+id/l1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="15dp"
-        android:layout_marginEnd="285dp"
-        android:background="@drawable/roundcorner"
-        android:gravity="center_horizontal"
-        android:paddingTop="10dp"/>
+        android:layout_height="130dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/roundcorner"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"/>
+
+        <TextView
+            android:id="@+id/username"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:text="User Name"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:textColor="#570924"/>
+    </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card"
@@ -27,7 +45,7 @@
         android:layout_marginTop="70dp"
         android:layout_marginRight="8dp"
         android:backgroundTint="#DDB0AD"
-        android:layout_below="@id/homeIcon">
+        android:layout_below="@id/l1">
 
         <LinearLayout
             android:layout_width="match_parent"

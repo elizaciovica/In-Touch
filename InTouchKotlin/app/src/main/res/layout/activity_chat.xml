@@ -12,10 +12,16 @@
         android:layout_height="200dp"
         android:orientation="horizontal">
 
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:src="@drawable/dobby" />
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/roundcorner"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"/>
 
         <TextView
             android:id="@+id/username"
@@ -32,19 +38,19 @@
     <androidx.recyclerview.widget.RecyclerView
         android:layout_below="@id/l1"
         android:layout_width="match_parent"
-        android:layout_above="@id/r1"
         android:layout_height="match_parent"
         android:id="@+id/chatRecyclerView"/>
 
     <RelativeLayout
         android:id="@+id/r1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_height="560dp"
+        android:layout_below="@+id/l1">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
             android:gravity="center"
             android:orientation="horizontal">
 
@@ -53,23 +59,30 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:inputType="text"
+                android:background="@android:color/transparent"
                 android:hint="Send message"
+                android:inputType="text"
                 android:padding="12dp"
-                android:textColorHint="#974763"
                 android:textColor="#570924"
-                android:background="@android:color/transparent"/>
+                android:textColorHint="#974763" />
 
-                        <ImageButton
-                            android:id="@+id/sendButton"
-                            android:layout_width="40dp"
-                            android:background="@drawable/ic_baseline_send_24"
-                            android:layout_height="40dp"
-                            android:backgroundTint="#570924"/>
+            <ImageButton
+                android:id="@+id/sendButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/ic_baseline_send_24"
+                android:backgroundTint="#570924" />
 
-                    </LinearLayout>
+        </LinearLayout>
 
 
-                </RelativeLayout>
+    </RelativeLayout>
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_bar"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/r1"/>
 
             </RelativeLayout>

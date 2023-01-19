@@ -2,10 +2,15 @@ package edu.msa.intouch.ui
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivitySharedConnectionBinding
 import edu.msa.intouch.model.Client
@@ -15,6 +20,7 @@ import kotlinx.serialization.json.Json
 
 class SharedConnectionActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySharedConnectionBinding
+    private var storageRef = Firebase.storage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +64,23 @@ class SharedConnectionActivity : AppCompatActivity() {
         val selectedUser =
             Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
         usernameTextView.text = selectedUser!!.firstName + " " + selectedUser!!.lastName
+
+        var islandRef = storageRef.reference.child("images/${selectedUser.firebaseId}")
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
+        }
     }
 
     private fun setNavigation(activity: Activity) {

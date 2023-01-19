@@ -37,6 +37,7 @@ class RequestsActivity : AppCompatActivity() {
         getProfilePicture()
         getRequestConnections()
         setNavigation(this)
+        getClientDetails()
     }
 
     private fun getMenu() {
@@ -132,5 +133,9 @@ class RequestsActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun getClientDetails() {
+        backendApiService.getClientById(this)
     }
 }

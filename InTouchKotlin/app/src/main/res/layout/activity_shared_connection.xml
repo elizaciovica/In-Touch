@@ -9,25 +9,32 @@
     android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/userDetails"
+        android:id="@+id/l1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        >
-        <ImageView
-            android:layout_width="150dp"
-            android:layout_height="150dp"
-            android:background="@drawable/dobby"
-        />
+        android:layout_height="200dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/homeIcon"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="10dp"
+            android:background="@drawable/roundcorner"
+            android:gravity="center_horizontal"
+            android:paddingTop="10dp"/>
+
         <TextView
             android:id="@+id/username"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:textSize="25sp"
-            android:layout_marginTop="40dp"
+            android:layout_weight="2"
             android:text="User Name"
-            android:textColor="#570924"
-            android:textStyle="bold"/>
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:layout_marginTop="40dp"
+            android:textColor="#570924"/>
     </LinearLayout>
 
     <androidx.gridlayout.widget.GridLayout

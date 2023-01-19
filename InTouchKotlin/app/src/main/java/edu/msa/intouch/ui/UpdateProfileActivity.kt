@@ -71,6 +71,7 @@ class UpdateProfileActivity : AppCompatActivity() {
         getMenu()
         uploadImage()
         setNavigation(this)
+        getClientDetails()
     }
 
     private fun getProfilePicture() {
@@ -254,5 +255,9 @@ class UpdateProfileActivity : AppCompatActivity() {
             }
             false
         }
+    }
+
+    private fun getClientDetails() {
+        backendApiService.getClientById(this)
     }
 }

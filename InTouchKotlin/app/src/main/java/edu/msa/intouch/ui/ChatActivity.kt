@@ -1,12 +1,20 @@
 package edu.msa.intouch.ui
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import edu.msa.intouch.R
 import edu.msa.intouch.databinding.ActivityChatBinding
 import edu.msa.intouch.model.Chat
@@ -20,6 +28,7 @@ class ChatActivity : AppCompatActivity() {
     var chatList = ArrayList<Chat>()
     private lateinit var recyclerView: RecyclerView
     val currentUser = FirebaseAuth.getInstance().currentUser
+    private var storageRef = Firebase.storage
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +38,7 @@ class ChatActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         setUserDetails()
         initializeButtons()
+        setNavigation(this)
         val selectedUser =
             Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
         readMessage(currentUser!!.uid, selectedUser.firebaseId)
@@ -60,6 +70,23 @@ class ChatActivity : AppCompatActivity() {
         val selectedUser =
             Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
         usernameTextView.text = selectedUser!!.firstName + " " + selectedUser!!.lastName
+
+        var islandRef = storageRef.reference.child("images/${selectedUser.firebaseId}")
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
+        }
     }
 
     private fun sendMessage(sender: String, receiver: String, message: String){
@@ -105,5 +132,19 @@ class ChatActivity : AppCompatActivity() {
                 recyclerView.adapter = chatAdapter
             }
         })
+    }
+
+    private fun setNavigation(activity: Activity) {
+        findViewById<BottomNavigationView>(R.id.bottom_navigation).setOnItemSelectedListener { item ->
+            if(item.itemId == R.id.page_1) {
+                activity.startActivity(Intent(activity, HomeActivity::class.java))
+                true
+            }
+            if(item.itemId == R.id.page_2) {
+                activity.startActivity(Intent(activity, ConnectionActivity::class.java))
+                true
+            }
+            false
+        }
     }
 }

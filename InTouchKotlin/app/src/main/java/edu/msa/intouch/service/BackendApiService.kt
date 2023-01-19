@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Handler
 import android.os.Looper
+import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -25,7 +26,7 @@ import java.io.IOException
 
 class BackendApiService : ViewModel() {
 
-    private val BACKEND_API_URL = "https://jboxjojkkf.loclx.io"
+    private val BACKEND_API_URL = "https://xuxv2qoicu.loclx.io"
     private val JSON = MediaType.parse("application/json; charset=utf-8")
     private var connectionLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
     private var requestsLiveData = MutableLiveData<List<edu.msa.intouch.model.Connection>>()
@@ -153,8 +154,24 @@ class BackendApiService : ViewModel() {
                         mapper.readValue(response.body()?.string().toString())
                     activity.findViewById<MaterialTextView>(R.id.email).text = client.email
                     activity.findViewById<MaterialTextView>(R.id.username).text = client.username
+                    activity.findViewById<TextView>(R.id.username1).text =
+                        client.firstName + " " + client.lastName
                     activity.findViewById<MaterialTextView>(R.id.firstname).text = client.firstName
                     activity.findViewById<MaterialTextView>(R.id.secondname).text = client.lastName
+                } else {
+                    println("API Response is not successful")
+                    showErrorMessage(activity)
+                }
+                response.close()
+            }
+
+            if (activity is HomeActivity || activity is ConnectionActivity || activity is RequestsActivity) {
+                if (response.isSuccessful) {
+                    val mapper = jacksonObjectMapper()
+                    val client: Client =
+                        mapper.readValue(response.body()?.string().toString())
+                    activity.findViewById<TextView>(R.id.username).text =
+                        client.firstName + " " + client.lastName
                 } else {
                     println("API Response is not successful")
                     showErrorMessage(activity)
@@ -168,6 +185,8 @@ class BackendApiService : ViewModel() {
                     val client: Client =
                         mapper.readValue(response.body()?.string().toString())
                     clientLiveData.postValue(client)
+                    activity.findViewById<TextView>(R.id.username1).text =
+                        client.firstName + " " + client.lastName
                 } else {
                     println("API Response is not successful")
                     showErrorMessage(activity)
