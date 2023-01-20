@@ -36,6 +36,7 @@ class CreateEventActivity : AppCompatActivity() {
         setDate()
         initButtons()
         createEvent()
+        setUserDetails()
     }
 
     private fun setBinding() {
@@ -164,6 +165,30 @@ class CreateEventActivity : AppCompatActivity() {
                         .show()
                 }
             }
+        }
+    }
+
+    private fun setUserDetails(){
+        val usernameTextView : TextView = findViewById(R.id.username)
+        val selectedUser =
+            Json.decodeFromString<Client>(intent.getSerializableExtra("selectedUser") as String)
+        usernameTextView.text = selectedUser!!.firstName + " " + selectedUser!!.lastName
+
+        var islandRef = storageRef.reference.child("images/${selectedUser.firebaseId}")
+        val ONE_MEGABYTE: Long = 1024 * 1024 * 10
+        islandRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+            binding.homeIcon.background = BitmapDrawable(
+                resources,
+                Bitmap.createScaledBitmap(
+                    bitmap,
+                    binding.homeIcon.width,
+                    binding.homeIcon.height,
+                    false
+                )
+            )
+        }.addOnFailureListener {
+            // Handle any errors
         }
     }
 }
