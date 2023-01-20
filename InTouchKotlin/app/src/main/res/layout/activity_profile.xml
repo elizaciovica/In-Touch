@@ -156,7 +156,7 @@
         android:layout_height="60dp"
         android:text="Update Profile"
         android:textColor="#570924"
-        android:backgroundTint="#D5D5CB"
+        android:backgroundTint="#E5989B"
         android:textSize="18dp"
         android:textFontWeight="300"
         android:layout_marginHorizontal="100dp"
